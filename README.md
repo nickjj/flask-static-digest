@@ -225,7 +225,7 @@ Each command is labeled, but here's a bit more information on what they do.
 #### compile
 
 Inspects your Flask app's `static_folder` and uses that as both the input and
-output path of where to look for and dump the newly digested and compressed
+output path of where to look for and create the newly digested and compressed
 files.
 
 At a high level it recursively loops over all of the files it finds in that
@@ -236,8 +236,8 @@ It also creates a `cache_manifest.json` file in the root of your
 That manifest file is machine generated meaning you should not edit it unless
 you really know what you're doing.
 
-This file maps the human readable file name of let's say `images/flask.png` and
-to the digested file name. It's a simple key / value set up. It's basically a
+This file maps the human readable file name of let's say `images/flask.png` to
+the digested file name. It's a simple key / value set up. It's basically a
 Python dictionary in JSON format.
 
 In the end it means if your static folder looked like this originally:
