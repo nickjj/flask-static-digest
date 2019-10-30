@@ -271,9 +271,9 @@ Inspects your Flask app's `static_folder` and uses that as the input path of
 where to look for digested and compressed files.
 
 It will recursively delete files that have a file extension of `.gz` and also
-delete files that have been digested. It determines if a file has been digested
-based on its file name. In other words, it will delete files that match this
-regexp `r"-[a-f\d]{32}"`.
+deletes files that have been digested. It determines if a file has been
+digested based on its file name. In other words, it will delete files that
+match this regexp `r"-[a-f\d]{32}"`.
 
 In the end that means if you had these 4 files in your static folder:
 
