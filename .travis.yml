@@ -6,7 +6,56 @@ python:
   - "3.7"
 
 before_install:
-  - "pip install flake8"
+  - "pip install flake8 Flask==1.1.1"
+  - "pip install -e ."
+  - "flake8 ."
 
 script:
-  - "flake8 ."
+  - "cd tests/example_app"
+  - "export FLASK_APP=example.app:create_app"
+
+  - >
+    ls -laR example/static/ | wc -l
+    | grep -q "26"
+    && (echo "File count before compiling test: pass" && exit 0)
+    || (echo "File count before compiling test: fail" && exit 1)
+
+  - >
+    flask digest compile
+    && ls -laR example/static/ | wc -l
+    | grep -q "36"
+    && (echo "File count after compiling test: pass" && exit 0)
+    || (echo "File count after compiling test: fail" && exit 1)
+
+  - >
+    grep -q "js/modules/hello.js" example/static/cache_manifest.json
+    && (echo "Cache manifest has nested file test: pass" && exit 0)
+    || (echo "Cache manifest has nested file test: fail" && exit 1)
+
+  - >
+    grep -q "js/modules/hello-d41d8cd98f00b204e9800998ecf8427e.js" example/static/cache_manifest.json
+    && (echo "Cache manifest has digested file test: pass" && exit 0)
+    || (echo "Cache manifest has digested file test: fail" && exit 1)
+
+  - >
+    flask run &
+    sleep 5
+    && curl http://localhost:5000
+    | grep -q '/static/css/app-d41d8cd98f00b204e9800998ecf8427e.css'
+    && (echo 'Stylesheet is md5 tagged test: pass' && exit 0)
+    || (echo 'Stylesheet is md5 tagged test: fail' && exit 1)
+
+  - >
+    flask digest clean
+    && ls -laR example/static/ | wc -l
+    | grep -q "26"
+    && (echo "File count after cleaning test: pass" && exit 0)
+    || (echo "File count after cleaning test: fail" && exit 1)
+
+  - >
+    flask run -p 5001 &
+    sleep 5
+    && curl http://localhost:5001
+    | grep -q '/static/js/app.js'
+    && (echo 'Javascript is not md5 tagged test: pass' && exit 0)
+    || (echo 'Javascript is not md5 tagged test: fail' && exit 1)
