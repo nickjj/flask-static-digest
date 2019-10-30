@@ -1,12 +1,9 @@
 from setuptools import setup
 
 
-with open("VERSION", "r") as f:
-    version = f.read()[:-1]
-
 setup(
     name="Flask-Static-Digest",
-    version=version,
+    version=open("VERSION").read()[:-1],
     author="Nick Janetakis",
     author_email="nick.janetakis@gmail.com",
     url="https://github.com/nickjj/flask-static-digest",
