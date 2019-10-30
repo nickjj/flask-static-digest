@@ -1,7 +1,9 @@
 ## What is Flask-Static-Digest? [![Build Status](https://secure.travis-ci.org/nickjj/flask-static-digest.png)](http://travis-ci.org/nickjj/flask-static-digest)
 
 It is a Flask extension that will make your static files production ready with
-very minimal effort on your part.
+very minimal effort on your part. It does this by md5 tagging and gzipping your
+static files. It does not bundle your assets or do any type of additional asset
+processing.
 
 Other web frameworks like Django, Ruby on Rails and Phoenix all have this
 feature built into their framework, and now with this extension Flask does too.
@@ -11,11 +13,21 @@ same time it also works with Webpack, Grunt, Gulp or any other build tool you
 can think of. This tool does not depend on or compete with existing asset build
 tools.**
 
-It does this by adding a Flask CLI command to your project. After running it,
-it takes your static files and then md5 tags them along with optionally
-gzipping them too. In the end this allows your web server (such as nginx) to
-efficiently serve and cache your CSS, JavaScript, images and fonts. We'll go
-more into this later.
+### How does it work?
+
+There's 3 pieces to this extension:
+
+1. It adds a custom Flask CLI command to your project. When you run this
+   command it looks at your static files and then generates an md5 tagged
+   version of each file along with optionally gzipping them too.
+
+2. When the above command finishes it creates a `cache_manifest.json` file in
+   your static folder which maps the regular file names, such as
+   `images/flask.png` to `images/flask-f86b271a51b3cfad5faa9299dacd987f.png`.
+
+3. It adds a new template helper called `static_url_for` which uses Flask's
+   `url_for` under the hood but is aware of the `cache_manifest.json` file so
+   it knows how to resolve `filename=images/flask.png` to the md5 tagged file.
 
 ### Installation / Quick start
 
@@ -85,22 +97,6 @@ Commands:
 
 If all went as planned you should see the new `digest` command added to the
 list of commands. More on this later.
-
-### How does it work?
-
-There's 3 pieces to this extension:
-
-1. It adds a custom Flask CLI command to your project. When you run this
-   command it looks at your static files and then generates an md5 tagged
-   version of each file along with optionally gzipping them too.
-
-2. When the above command finishes it creates a `cache_manifest.json` file in
-   your static folder which maps the regular file names, such as
-   `images/flask.png` to `images/flask-f86b271a51b3cfad5faa9299dacd987f.png`.
-
-3. It adds a new template helper called `static_url_for` which uses Flask's
-   `url_for` under the hood but is aware of the `cache_manifest.json` file so 
-   it knows how to resolve `filename=images/flask.png` to the md5 tagged file.
 
 ### Referencing static files using Flask's url_for helper
 
