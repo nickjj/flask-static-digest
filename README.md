@@ -68,6 +68,9 @@ def create_app():
     return app
 ```
 
+*A more complete example app can be found in the [tests/
+directory](https://github.com/nickjj/flask-static-digest/tree/master/tests/example_app).*
+
 #### Using the newly added Flask CLI command
 
 You'll want to make sure to at least set the `FLASK_APP` environment variable:
