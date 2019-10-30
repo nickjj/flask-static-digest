@@ -65,7 +65,7 @@ export FLASK_APP=hello.app:create_app
 export FLASK_ENV=development
 ```
 
-Then run the `flask` binary to see its help menu.
+Then run the `flask` binary to see its help menu:
 
 ```sh
 Usage: flask [OPTIONS] COMMAND [ARGS]...
