@@ -76,7 +76,7 @@ directory](https://github.com/nickjj/flask-static-digest/tree/master/tests/examp
 You'll want to make sure to at least set the `FLASK_APP` environment variable:
 
 ```sh
-export FLASK_APP=hello.app:create_app
+export FLASK_APP=hello.app
 export FLASK_ENV=development
 ```
 
