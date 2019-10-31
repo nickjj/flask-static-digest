@@ -31,7 +31,7 @@ There's 3 pieces to this extension:
 
 ### Installation / Quick start
 
-*You'll need to be running Python 3.x and using Flask 1.0 or greater.*
+*You'll need to be running Python 3.5+ and using Flask 1.0 or greater.*
 
 `pip install Flask-Static-Digest`
 
