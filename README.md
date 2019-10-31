@@ -292,6 +292,32 @@ static files using a CDN. Using this cache busting strategy makes configuring
 your CDN a piece of cake since you don't need to worry about ever expiring your
 cache manually.
 
+### Potentially updating your .gitignore file
+
+If you're using something like Webpack then chances are you're already git
+ignoring the static files it produces as output. It's a common pattern to
+commit your Webpack source assets but ignore the compiled result of those
+assets.
+
+But if you're not using Webpack or another asset build tool then the static
+files that are a part of your project might have the same source and
+destination directory. If that's the case, chances are you'll want to git
+ignore the md5 tagged files as well as the gzipped and `cache_manifest.json`
+files from version control.
+
+Add this to your `.gitignore` file to ignore certain files this extension
+creates:
+
+```
+*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].*
+*.gz
+cache_manifest.json
+```
+
+This allows your original static files but ignores everything else this
+extension creates. I am aware at how ridiculous that ignore rule is for the md5
+hash but using `[0-9a-f]{32}` does not work. If you know of a better way,
+please open a PR!
 
 ### About the author
 
