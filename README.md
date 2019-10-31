@@ -192,7 +192,7 @@ don't like that behavior there's 2 options you can optionally configure:
 ```py
 FLASK_STATIC_DIGEST_BLACKLIST_FILTER = []
 # If you want specific extensions to not get md5 tagged you can add them to
-# the list, such as: [".htm", ".html", .txt"]. Make sure to include the ".".
+# the list, such as: [".htm", ".html", ".txt"]. Make sure to include the ".".
 
 FLASK_STATIC_DIGEST_GZIP_FILES = True
 # When set to False then gzipped files will not be created but static files
