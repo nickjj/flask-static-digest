@@ -12,7 +12,7 @@ before_install:
 
 script:
   - "cd tests/example_app"
-  - "export FLASK_APP=example.app:create_app"
+  - "export FLASK_APP=example.app"
 
   - >
     ls -laR example/static/ | wc -l
