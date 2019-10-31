@@ -292,12 +292,31 @@ static files using a CDN. Using this cache busting strategy makes configuring
 your CDN a piece of cake since you don't need to worry about ever expiring your
 cache manually.
 
+### How do you use this extension with Webpack or another build tool?
+
+It works out of the box with no extra configuration or plugins needed for
+Webpack or your build tool of choice.
+
+Typically the Webpack (or another build tool) work flow would look like this:
+
+- You configure Webpack with your source static files directory
+- You configure Webpack with your destination static files directory
+- Webpack processes your files in the source directory and copies them to the destination directory
+- Flask is configured to serve static files from that destination directory
+
+For example, your source directory might be `assets/` inside of your project
+and the destination might be `myapp/static`.
+
+This extension will look at your Flask configuration for the `static_folder`
+and determine it's set to `myapp/static` so it will md5 tag and gzip those
+files. Your Webpack source files will not get digested and compressed.
+
 ### Potentially updating your .gitignore file
 
 If you're using something like Webpack then chances are you're already git
 ignoring the static files it produces as output. It's a common pattern to
-commit your Webpack source assets but ignore the compiled result of those
-assets.
+commit your Webpack source static files but ignore the compiled static files
+it produces.
 
 But if you're not using Webpack or another asset build tool then the static
 files that are a part of your project might have the same source and
