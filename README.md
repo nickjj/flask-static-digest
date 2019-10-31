@@ -27,7 +27,7 @@ There's 3 pieces to this extension:
 
 3. It adds a new template helper called `static_url_for` which uses Flask's
    `url_for` under the hood but is aware of the `cache_manifest.json` file so
-   it knows how to resolve `filename=images/flask.png` to the md5 tagged file.
+   it knows how to resolve `images/flask.png` to the md5 tagged file name.
 
 ### Installation / Quick start
 
@@ -99,108 +99,7 @@ Commands:
 ```
 
 If all went as planned you should see the new `digest` command added to the
-list of commands. More on this later.
-
-### Referencing static files using Flask's url_for helper
-
-We're all familiar with this code right?
-
-```html
-<img src="{{ url_for('static', filename='images/flask.png') }}"
-     width="480" height="188" alt="Flask logo" />
-```
-
-When you put the above code into a Flask powered Jinja 2 template, it turns
-into this:
-
-```html
-<img src="images/flask.png"
-     width="480" height="188" alt="Flask logo" />
-```
-
-The path might vary depending on how you configured your Flask app's
-`static_folder` but you get the idea.
-
-### Referencing static files using Flask-Static-Digest's static_url_for helper
-
-Let's use the same example as above:
-
-```html
-<img src="{{ static_url_for('static', filename='images/flask.png') }}"
-     width="480" height="188" alt="Flask logo" />
-```
-
-But now take a look at the output this produces:
-
-```html
-<img src="/images/flask-f86b271a51b3cfad5faa9299dacd987f.png"
-     width="480" height="188" alt="Flask logo" />
-```
-
-Instead of using `url_for` you would use `static_url_for`. This uses Flask's
-`url_for` under the hood so things like `_external=True` and everything else
-`url_for` supports is available to use with `static_url_for`.
-
-That means to use this extension you don't have to do anything other than
-install it, optionally run the CLI command to generate the manifest and then
-rename your static file references to use `static_url_for` instead of
-`url_for`.
-
-### What about development vs production and performance implications?
-
-You would typically only run the CLI command to prepare your static files for
-production. In development when the `cache_manifest.json` likely doesn't exist
-`static_url_for` calls `url_for` directly. This allows the `static_url_for`
-helper to work in both development and production without any fuss.
-
-It's also worth pointing out the CLI command is expected to be run before you
-even start your Flask server (or gunicorn / etc.), so there's no perceivable
-run time performance hit. It only involves doing 1 extra dictionary lookup at
-run time which is many orders of magnitude faster than even the most simple
-database query.
-
-**In other words, this extension is not going to negatively impact the
-performance of your web application. If anything it's going to speed it up and
-save you money on hosting**.
-
-That's because gzipped files can be upwards of 5-10x smaller so there's less
-bytes to transfer over the network.
-
-Also with md5 tagging each file it means you can configure your web server such
-as nginx to cache each file forever. That means if a user visits your site a
-second time in the future, nginx will be smart enough to load it from their
-local browser's cache without even contacting your server. It's a 100% local
-look up.
-
-This is as efficient as it gets. You can't do this normally without md5 tagging
-each file because if the file changes in the future, nginx will continue
-serving the old file until the cache expires so users will never see your
-updates. But due to how md5 hashing works, if the contents of a file changes it
-will get generated with a new name and nginx will serve the uncached new file.
-
-This tactic is commonly referred to as "cache busting" and it's a very good
-idea to do this in production. You can even go 1 step further and serve your
-static files using a CDN. Using this cache busting strategy makes configuring
-your CDN a piece of cake since you don't need to worry about ever expiring your
-cache manually.
-
-### Configuring this extension
-
-By default this extension will md5 tag all files it finds in your configured
-`static_folder`. It will also create gzipped versions of each file. If you
-don't like that behavior there's 2 options you can optionally configure:
-
-```py
-FLASK_STATIC_DIGEST_BLACKLIST_FILTER = []
-# If you want specific extensions to not get md5 tagged you can add them to
-# the list, such as: [".htm", ".html", .txt"]. Make sure to include the ".".
-
-FLASK_STATIC_DIGEST_GZIP_FILES = True
-# When set to False then gzipped files will not be created but static files
-# will still get md5 tagged.
-```
-
-You can override these defaults in your Flask app's config file.
+list of commands.
 
 ### Going over the Flask CLI commands
 
@@ -283,6 +182,116 @@ In the end that means if you had these 4 files in your static folder:
 
 And you decided to run the clean command, the last 3 files would be deleted
 leaving you with the original `images/flask.png`.
+
+### Configuring this extension
+
+By default this extension will md5 tag all files it finds in your configured
+`static_folder`. It will also create gzipped versions of each file. If you
+don't like that behavior there's 2 options you can optionally configure:
+
+```py
+FLASK_STATIC_DIGEST_BLACKLIST_FILTER = []
+# If you want specific extensions to not get md5 tagged you can add them to
+# the list, such as: [".htm", ".html", .txt"]. Make sure to include the ".".
+
+FLASK_STATIC_DIGEST_GZIP_FILES = True
+# When set to False then gzipped files will not be created but static files
+# will still get md5 tagged.
+```
+
+You can override these defaults in your Flask app's config file.
+
+### Modifying your templates to use static_url_for instead of url_for
+
+We're all familiar with this code right?
+
+```html
+<img src="{{ url_for('static', filename='images/flask.png') }}"
+     width="480" height="188" alt="Flask logo" />
+```
+
+When you put the above code into a Flask powered Jinja 2 template, it turns
+into this:
+
+```html
+<img src="images/flask.png"
+     width="480" height="188" alt="Flask logo" />
+```
+
+The path might vary depending on how you configured your Flask app's
+`static_folder` but you get the idea.
+
+#### Using static_url_for instead of url_for
+
+Let's use the same example as above:
+
+```html
+<img src="{{ static_url_for('static', filename='images/flask.png') }}"
+     width="480" height="188" alt="Flask logo" />
+```
+
+But now take a look at the output this produces:
+
+```html
+<img src="/images/flask-f86b271a51b3cfad5faa9299dacd987f.png"
+     width="480" height="188" alt="Flask logo" />
+```
+
+Instead of using `url_for` you would use `static_url_for`. This uses Flask's
+`url_for` under the hood so things like `_external=True` and everything else
+`url_for` supports is available to use with `static_url_for`.
+
+That means to use this extension you don't have to do anything other than
+install it, optionally run the CLI command to generate the manifest and then
+rename your static file references to use `static_url_for` instead of
+`url_for`.
+
+If your editor supports performing a find / replace across multiple files you
+can quickly make the change by finding `url_for('static'` and replacing that
+with `static_url_for('static'`. If you happen to use double quotes instead of
+single quotes you'll want to adjust for that too.
+
+### What about development vs production and performance implications?
+
+You would typically only run the CLI command to prepare your static files for
+production. Running `flask digest compile` would become a part of your build
+process -- typically after you pip install your dependencies.
+
+In development when the `cache_manifest.json` likely doesn't exist
+`static_url_for` calls `url_for` directly. This allows the `static_url_for`
+helper to work in both development and production without any fuss.
+
+It's also worth pointing out the CLI command is expected to be run before you
+even start your Flask server (or gunicorn / etc.), so there's no perceivable
+run time performance hit. It only involves doing 1 extra dictionary lookup at
+run time which is many orders of magnitude faster than even the most simple
+database query.
+
+**In other words, this extension is not going to negatively impact the
+performance of your web application. If anything it's going to speed it up and
+save you money on hosting**.
+
+That's because gzipped files can be upwards of 5-10x smaller so there's less
+bytes to transfer over the network.
+
+Also with md5 tagging each file it means you can configure your web server such
+as nginx to cache each file forever. That means if a user visits your site a
+second time in the future, nginx will be smart enough to load it from their
+local browser's cache without even contacting your server. It's a 100% local
+look up.
+
+This is as efficient as it gets. You can't do this normally without md5 tagging
+each file because if the file changes in the future, nginx will continue
+serving the old file until the cache expires so users will never see your
+updates. But due to how md5 hashing works, if the contents of a file changes it
+will get generated with a new name and nginx will serve the uncached new file.
+
+This tactic is commonly referred to as "cache busting" and it's a very good
+idea to do this in production. You can even go 1 step further and serve your
+static files using a CDN. Using this cache busting strategy makes configuring
+your CDN a piece of cake since you don't need to worry about ever expiring your
+cache manually.
+
 
 ### About the author
 
