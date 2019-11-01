@@ -324,6 +324,10 @@ destination directory. If that's the case, chances are you'll want to git
 ignore the md5 tagged files as well as the gzipped and `cache_manifest.json`
 files from version control.
 
+For clarity, you want to ignore them because you'll be generating them on your
+server at deploy time or within a Docker image if you're using Docker.  They
+don't need to be tracked in version control.
+
 Add this to your `.gitignore` file to ignore certain files this extension
 creates:
 
