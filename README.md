@@ -29,6 +29,18 @@ There's 3 pieces to this extension:
    `url_for` under the hood but is aware of the `cache_manifest.json` file so
    it knows how to resolve `images/flask.png` to the md5 tagged file name.
 
+### Demo video
+
+This 25 minute video goes over using this extension but it also spends a lot
+of time on the "why" where we cover topics like cache busting and why IMO you
+might want to use this extension in all of your Flask projects.
+
+[![Demo
+Video](https://img.youtube.com/vi/-Xd84hlIjkI/0.jpg)](https://www.youtube.com/watch?v=-Xd84hlIjkI)
+
+If you prefer reading instead of video, this README file covers installing,
+configuring and using this extension too.
+
 ## Table of Contents
 
 - [Installation](#installation)
