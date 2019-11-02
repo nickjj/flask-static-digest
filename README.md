@@ -1,4 +1,4 @@
-## What is Flask-Static-Digest? [![Build Status](https://secure.travis-ci.org/nickjj/flask-static-digest.png)](http://travis-ci.org/nickjj/flask-static-digest)
+# What is Flask-Static-Digest? [![Build Status](https://secure.travis-ci.org/nickjj/flask-static-digest.png)](http://travis-ci.org/nickjj/flask-static-digest)
 
 It is a Flask extension that will make your static files production ready with
 very minimal effort on your part. It does this by md5 tagging and gzipping your
@@ -13,7 +13,7 @@ same time it also works with Webpack, Grunt, Gulp or any other build tool you
 can think of. This tool does not depend on or compete with existing asset build
 tools.**
 
-### How does it work?
+## How does it work?
 
 There's 3 pieces to this extension:
 
@@ -29,7 +29,7 @@ There's 3 pieces to this extension:
    `url_for` under the hood but is aware of the `cache_manifest.json` file so
    it knows how to resolve `images/flask.png` to the md5 tagged file name.
 
-### Table of Contents
+## Table of Contents
 
 - [Installation](#installation)
 - [Using the newly added Flask CLI command](#using-the-newly-added-flask-cli-command)
@@ -44,13 +44,13 @@ There's 3 pieces to this extension:
   - [How do you use this extension with Docker?](#how-do-you-use-this-extension-with-docker)
 - [About the author](#about-the-author)
 
-### Installation
+## Installation
 
 *You'll need to be running Python 3.5+ and using Flask 1.0 or greater.*
 
 `pip install Flask-Static-Digest`
 
-#### Example directory structure for a 'hello' app
+### Example directory structure for a 'hello' app
 
 ```
 ├── hello
@@ -62,7 +62,7 @@ There's 3 pieces to this extension:
 └── requirements.txt
 ```
 
-#### Flask app factory example using this extension
+### Flask app factory example using this extension
 
 ```py
 from flask import Flask
@@ -86,7 +86,7 @@ def create_app():
 *A more complete example app can be found in the [tests/
 directory](https://github.com/nickjj/flask-static-digest/tree/master/tests/example_app).*
 
-#### Using the newly added Flask CLI command
+## Using the newly added Flask CLI command
 
 You'll want to make sure to at least set the `FLASK_APP` environment variable:
 
@@ -116,7 +116,7 @@ Commands:
 If all went as planned you should see the new `digest` command added to the
 list of commands.
 
-### Going over the Flask CLI commands
+## Going over the Flask CLI commands
 
 Running `flask digest` will produce this help menu:
 
@@ -135,7 +135,7 @@ Commands:
 
 Each command is labeled, but here's a bit more information on what they do.
 
-#### compile
+### compile
 
 Inspects your Flask app's `static_folder` and uses that as both the input and
 output path of where to look for and create the newly digested and compressed
@@ -178,7 +178,7 @@ And you decided to run the compile command, it would now look like this:
 *Your md5 hashes will be different because it depends on what the contents of
 the file are.*
 
-#### clean
+### clean
 
 Inspects your Flask app's `static_folder` and uses that as the input path of
 where to look for digested and compressed files.
@@ -198,7 +198,7 @@ In the end that means if you had these 4 files in your static folder:
 And you decided to run the clean command, the last 3 files would be deleted
 leaving you with the original `images/flask.png`.
 
-### Configuring this extension
+## Configuring this extension
 
 By default this extension will md5 tag all files it finds in your configured
 `static_folder`. It will also create gzipped versions of each file. If you
@@ -216,7 +216,7 @@ FLASK_STATIC_DIGEST_GZIP_FILES = True
 
 You can override these defaults in your Flask app's config file.
 
-### Modifying your templates to use static_url_for instead of url_for
+## Modifying your templates to use static_url_for instead of url_for
 
 We're all familiar with this code right?
 
@@ -266,7 +266,7 @@ can quickly make the change by finding `url_for('static'` and replacing that
 with `static_url_for('static'`. If you happen to use double quotes instead of
 single quotes you'll want to adjust for that too.
 
-### Potentially updating your .gitignore file
+## Potentially updating your .gitignore file
 
 If you're using something like Webpack then chances are you're already git
 ignoring the static files it produces as output. It's a common pattern to
@@ -297,9 +297,9 @@ extension creates. I am aware at how ridiculous that ignore rule is for the md5
 hash but using `[0-9a-f]{32}` does not work. If you know of a better way,
 please open a PR!
 
-### FAQ
+## FAQ
 
-#### What about development vs production and performance implications?
+### What about development vs production and performance implications?
 
 You would typically only run the CLI command to prepare your static files for
 production. Running `flask digest compile` would become a part of your build
@@ -340,7 +340,7 @@ static files using a CDN. Using this cache busting strategy makes configuring
 your CDN a piece of cake since you don't need to worry about ever expiring your
 cache manually.
 
-#### How do you use this extension with Webpack or another build tool?
+### How do you use this extension with Webpack or another build tool?
 
 It works out of the box with no extra configuration or plugins needed for
 Webpack or your build tool of choice.
@@ -359,7 +359,7 @@ This extension will look at your Flask configuration for the `static_folder`
 and determine it's set to `myapp/static` so it will md5 tag and gzip those
 files. Your Webpack source files will not get digested and compressed.
 
-#### Migrating from Flask-Webpack
+### Migrating from Flask-Webpack
 
 [Flask-Webpack](https://github.com/nickjj/flask-webpack) is another extension I
 wrote a long time ago which was specific to Webpack but had a similar idea to
@@ -367,7 +367,7 @@ this extension. Flask-Webpack is now deprecated in favor of
 Flask-Static-Digest. Migrating is fairly painless. There are a number of
 changes but on the bright side you get to delete more code than you add!
 
-##### Dependency / Flask app changes
+#### Dependency / Flask app changes
 
 - Remove `Flask-Webpack` from `requirements.txt`
 - Remove all references to Flask-Webpack from your Flask app
@@ -376,13 +376,13 @@ changes but on the bright side you get to delete more code than you add!
 - Add `Flask-Static-Digest` to `requirements.txt`
 - Add the Flask-Static-Digest extension to your Flask app
 
-##### Jinja 2 template changes
+#### Jinja 2 template changes
 
 - Replace `stylesheet_tag('main_css') | safe` with `static_url_for('static', filename='css/main.css')`
 - Replace `javascript_tag('main_js') | safe` with `static_url_for('static', filename='js/main.js')`
 - Replace any occurrences of `asset_url_for('foo.png')` with `static_url_for('static', filename='images/foo.png')`
 
-#### How do you use this extension with Docker?
+### How do you use this extension with Docker?
 
 It's really no different than without Docker, but instead of running `flask
 digest compile` on your server directly at deploy time you would run it inside
@@ -398,7 +398,7 @@ leverages Docker's build arguments to only compile the static files when
 `Dockerfile`, `docker-compose.yml` and `.env` files. That wires up the build
 arguments and env variables to make it work.
 
-### About the author
+## About the author
 
 - Nick Janetakis | <https://nickjanetakis.com> | [@nickjanetakis](https://twitter.com/nickjanetakis)
 
