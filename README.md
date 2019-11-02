@@ -36,7 +36,7 @@ There's 3 pieces to this extension:
 - [Going over the Flask CLI commands](#going-over-the-flask-cli-commands)
 - [Configuring this extension](#configuring-this-extension)
 - [Modifying your templates to use static_url_for instead of url_for](#modifying-your-templates-to-use-static_url_for-instead-of-url_for)
-- [Potentially updating your .gitignore file](#potentially-updating-your-.gitignore-file)
+- [Potentially updating your .gitignore file](#potentially-updating-your-gitignore-file)
 - [FAQ](#faq)
   - [What about development vs production and performance implications?](#what-about-development-vs-production-and-performance-implications)
   - [How do you use this extension with Webpack or another build tool?](#how-do-you-use-this-extension-with-webpack-or-another-build-tool)
