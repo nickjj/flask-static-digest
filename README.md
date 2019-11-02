@@ -311,6 +311,29 @@ This extension will look at your Flask configuration for the `static_folder`
 and determine it's set to `myapp/static` so it will md5 tag and gzip those
 files. Your Webpack source files will not get digested and compressed.
 
+### Migrating from Flask-Webpack
+
+[Flask-Webpack](https://github.com/nickjj/flask-webpack) is another extension I
+wrote a long time ago which was specific to Webpack but had a similar idea to
+this extension. Flask-Webpack is now deprecated in favor of
+Flask-Static-Digest. Migrating is fairly painless. There are a number of
+changes but on the bright side you get to delete more code than you add!
+
+#### Dependency / Flask app changes
+
+- Remove `Flask-Webpack` from `requirements.txt`
+- Remove all references to Flask-Webpack from your Flask app
+- Remove `manifest-revision-webpack-plugin` from `package.json`
+- Remove all references to this webpack plugin from your webpack config
+- Add `Flask-Static-Digest` to `requirements.txt`
+- Add the Flask-Static-Digest extension to your Flask app
+
+#### Jinja 2 template changes
+
+- Replace `stylesheet_tag('main_css') | safe` with `static_url_for('static', filename='css/main.css')`
+- Replace `javascript_tag('main_js') | safe` with `static_url_for('static', filename='js/main.js')`
+- Replace any occurrences of `asset_url_for('foo.png')` with `static_url_for('static', filename='images/foo.png')`
+
 ### Potentially updating your .gitignore file
 
 If you're using something like Webpack then chances are you're already git
