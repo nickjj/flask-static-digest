@@ -342,6 +342,22 @@ extension creates. I am aware at how ridiculous that ignore rule is for the md5
 hash but using `[0-9a-f]{32}` does not work. If you know of a better way,
 please open a PR!
 
+### How do you use this extension with Docker?
+
+It's really no different than without Docker, but instead of running `flask
+digest compile` on your server directly at deploy time you would run it inside
+of your Docker image at build time. This way your static files are already set
+up and ready to go by the time you pull and use your Docker image in
+production.
+
+You can see a fully working example of this in the open source version of my
+[Build a SAAS App with
+Flask](https://github.com/nickjj/build-a-saas-app-with-flask) course. It
+leverages Docker's build arguments to only compile the static files when
+`FLASK_ENV` is set to `production`. The key files to look at are the
+`Dockerfile`, `docker-compose.yml` and `.env` files. That wires up the build
+arguments and env variables to make it work.
+
 ### About the author
 
 - Nick Janetakis | <https://nickjanetakis.com> | [@nickjanetakis](https://twitter.com/nickjanetakis)
