@@ -39,6 +39,7 @@ There's 3 pieces to this extension:
 - [Potentially updating your .gitignore file](#potentially-updating-your-gitignore-file)
 - [FAQ](#faq)
   - [What about development vs production and performance implications?](#what-about-development-vs-production-and-performance-implications)
+  - [Why bother gzipping your static files here instead of with nginx?](#why-bother-gzipping-your-static-files-here-instead-of-with-nginx)
   - [How do you use this extension with Webpack or another build tool?](#how-do-you-use-this-extension-with-webpack-or-another-build-tool)
   - [Migrating from Flask-Webpack](#migrating-from-flask-webpack)
   - [How do you use this extension with Docker?](#how-do-you-use-this-extension-with-docker)
@@ -339,6 +340,17 @@ idea to do this in production. You can even go 1 step further and serve your
 static files using a CDN. Using this cache busting strategy makes configuring
 your CDN a piece of cake since you don't need to worry about ever expiring your
 cache manually.
+
+### Why bother gzipping your static files here instead of with nginx?
+
+You would still be using nginx's gzip features, but now instead of nginx having
+to gzip your files on the fly at run time you can configure nginx to use the
+pre-made gzipped files that this extension creates.
+
+This way you can benefit from having maximum compression without having nginx
+waste precious CPU cycles gzipping files on the fly. This gives you the best of
+both worlds -- the highest compression ratio with no noticeable run time
+performance penalty.
 
 ### How do you use this extension with Webpack or another build tool?
 
