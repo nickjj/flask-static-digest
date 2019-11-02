@@ -29,7 +29,22 @@ There's 3 pieces to this extension:
    `url_for` under the hood but is aware of the `cache_manifest.json` file so
    it knows how to resolve `images/flask.png` to the md5 tagged file name.
 
-### Installation / Quick start
+### Table of Contents
+
+- [Installation](#installation)
+- [Using the newly added Flask CLI command](#using-the-newly-added-flask-cli-command)
+- [Going over the Flask CLI commands](#going-over-the-flask-cli-commands)
+- [Configuring this extension](#configuring-this-extension)
+- [Modifying your templates to use static_url_for instead of url_for](#modifying-your-templates-to-use-static_url_for-instead-of-url_for)
+- [Potentially updating your .gitignore file](#potentially-updating-your-.gitignore-file)
+- [FAQ](#faq)
+  - [What about development vs production and performance implications?](#what-about-development-vs-production-and-performance-implications)
+  - [How do you use this extension with Webpack or another build tool?](#how-do-you-use-this-extension-with-webpack-or-another-build-tool)
+  - [Migrating from Flask-Webpack](#migrating-from-flask-webpack)
+  - [How do you use this extension with Docker?](#how-do-you-use-this-extension-with-docker)
+- [About the author](#about-the-author)
+
+### Installation
 
 *You'll need to be running Python 3.5+ and using Flask 1.0 or greater.*
 
@@ -251,7 +266,40 @@ can quickly make the change by finding `url_for('static'` and replacing that
 with `static_url_for('static'`. If you happen to use double quotes instead of
 single quotes you'll want to adjust for that too.
 
-### What about development vs production and performance implications?
+### Potentially updating your .gitignore file
+
+If you're using something like Webpack then chances are you're already git
+ignoring the static files it produces as output. It's a common pattern to
+commit your Webpack source static files but ignore the compiled static files
+it produces.
+
+But if you're not using Webpack or another asset build tool then the static
+files that are a part of your project might have the same source and
+destination directory. If that's the case, chances are you'll want to git
+ignore the md5 tagged files as well as the gzipped and `cache_manifest.json`
+files from version control.
+
+For clarity, you want to ignore them because you'll be generating them on your
+server at deploy time or within a Docker image if you're using Docker.  They
+don't need to be tracked in version control.
+
+Add this to your `.gitignore` file to ignore certain files this extension
+creates:
+
+```
+*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].*
+*.gz
+cache_manifest.json
+```
+
+This allows your original static files but ignores everything else this
+extension creates. I am aware at how ridiculous that ignore rule is for the md5
+hash but using `[0-9a-f]{32}` does not work. If you know of a better way,
+please open a PR!
+
+### FAQ
+
+#### What about development vs production and performance implications?
 
 You would typically only run the CLI command to prepare your static files for
 production. Running `flask digest compile` would become a part of your build
@@ -292,7 +340,7 @@ static files using a CDN. Using this cache busting strategy makes configuring
 your CDN a piece of cake since you don't need to worry about ever expiring your
 cache manually.
 
-### How do you use this extension with Webpack or another build tool?
+#### How do you use this extension with Webpack or another build tool?
 
 It works out of the box with no extra configuration or plugins needed for
 Webpack or your build tool of choice.
@@ -311,7 +359,7 @@ This extension will look at your Flask configuration for the `static_folder`
 and determine it's set to `myapp/static` so it will md5 tag and gzip those
 files. Your Webpack source files will not get digested and compressed.
 
-### Migrating from Flask-Webpack
+#### Migrating from Flask-Webpack
 
 [Flask-Webpack](https://github.com/nickjj/flask-webpack) is another extension I
 wrote a long time ago which was specific to Webpack but had a similar idea to
@@ -319,7 +367,7 @@ this extension. Flask-Webpack is now deprecated in favor of
 Flask-Static-Digest. Migrating is fairly painless. There are a number of
 changes but on the bright side you get to delete more code than you add!
 
-#### Dependency / Flask app changes
+##### Dependency / Flask app changes
 
 - Remove `Flask-Webpack` from `requirements.txt`
 - Remove all references to Flask-Webpack from your Flask app
@@ -328,44 +376,13 @@ changes but on the bright side you get to delete more code than you add!
 - Add `Flask-Static-Digest` to `requirements.txt`
 - Add the Flask-Static-Digest extension to your Flask app
 
-#### Jinja 2 template changes
+##### Jinja 2 template changes
 
 - Replace `stylesheet_tag('main_css') | safe` with `static_url_for('static', filename='css/main.css')`
 - Replace `javascript_tag('main_js') | safe` with `static_url_for('static', filename='js/main.js')`
 - Replace any occurrences of `asset_url_for('foo.png')` with `static_url_for('static', filename='images/foo.png')`
 
-### Potentially updating your .gitignore file
-
-If you're using something like Webpack then chances are you're already git
-ignoring the static files it produces as output. It's a common pattern to
-commit your Webpack source static files but ignore the compiled static files
-it produces.
-
-But if you're not using Webpack or another asset build tool then the static
-files that are a part of your project might have the same source and
-destination directory. If that's the case, chances are you'll want to git
-ignore the md5 tagged files as well as the gzipped and `cache_manifest.json`
-files from version control.
-
-For clarity, you want to ignore them because you'll be generating them on your
-server at deploy time or within a Docker image if you're using Docker.  They
-don't need to be tracked in version control.
-
-Add this to your `.gitignore` file to ignore certain files this extension
-creates:
-
-```
-*-[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].*
-*.gz
-cache_manifest.json
-```
-
-This allows your original static files but ignores everything else this
-extension creates. I am aware at how ridiculous that ignore rule is for the md5
-hash but using `[0-9a-f]{32}` does not work. If you know of a better way,
-please open a PR!
-
-### How do you use this extension with Docker?
+#### How do you use this extension with Docker?
 
 It's really no different than without Docker, but instead of running `flask
 digest compile` on your server directly at deploy time you would run it inside
