@@ -1,9 +1,10 @@
 # What is Flask-Static-Digest? [![Build Status](https://secure.travis-ci.org/nickjj/flask-static-digest.png)](http://travis-ci.org/nickjj/flask-static-digest)
 
-It is a Flask extension that will make your static files production ready with
-very minimal effort on your part. It does this by md5 tagging and gzipping your
-static files. It does not bundle your assets or do any type of additional asset
-processing.
+It is a Flask extension that will help make your static files production ready
+with very minimal effort on your part. It does this by md5 tagging and gzipping
+your static files after running a `flask digest compile` command that this
+extension adds to your Flask app. It should be the last thing you do to your
+static files before uploading them to your server or CDN.
 
 Other web frameworks like Django, Ruby on Rails and Phoenix all have this
 feature built into their framework, and now with this extension Flask does too.
@@ -12,6 +13,17 @@ feature built into their framework, and now with this extension Flask does too.
 same time it also works with Webpack, Grunt, Gulp or any other build tool you
 can think of. This tool does not depend on or compete with existing asset build
 tools.**
+
+If you're already using Webpack or a similar tool, that's great. Webpack takes
+care of bundling your assets and helps convert things like SASS to CSS and ES6+
+JS to browser compatible JS. That is solving a completely different problem
+than what this extension solves. This extension will further optimize your
+static files after your build tool produces its output files.
+
+This extension does things that Webpack alone cannot do because in order for
+things like md5 tagging to work Flask needs to be aware of how to map those
+hashed file names back to regular file names you would reference in your Jinja
+2 templates.
 
 ## How does it work?
 
