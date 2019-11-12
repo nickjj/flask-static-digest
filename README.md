@@ -406,7 +406,7 @@ changes but on the bright side you get to delete more code than you add!
 #### Dependency / Flask app changes
 
 - Remove `Flask-Webpack` from `requirements.txt`
-- Remove all references to Flask-Webpack from your Flask app
+- Remove all references to Flask-Webpack from your Flask app and config
 - Remove `manifest-revision-webpack-plugin` from `package.json`
 - Remove all references to this webpack plugin from your webpack config
 - Add `Flask-Static-Digest` to `requirements.txt`
