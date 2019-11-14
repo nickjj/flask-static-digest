@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 from flask import url_for as flask_url_for
 
@@ -55,6 +56,10 @@ class FlaskStaticDigest(object):
 
         new_filename = {}
         filename = values.get("filename")
+
+        win = sys.platform.startswith('win')
+        if win:
+            filename = filename.replace('/', '\\')
 
         if filename:
             new_filename["filename"] = self.manifest.get(filename)
