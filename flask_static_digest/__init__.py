@@ -58,11 +58,16 @@ class FlaskStaticDigest(object):
         filename = values.get("filename")
 
         win = sys.platform.startswith('win')
-        if win:
-            filename = filename.replace('/', '\\')
 
         if filename:
-            new_filename["filename"] = self.manifest.get(filename)
+            if win:
+                filename = filename.replace('/', '\\')
+                new_filepath = self.manifest.get(filename)
+                new_filepath = new_filepath.replace('\\', '/')
+            else:
+                new_filepath = self.manifest.get(filename)
+
+            new_filename["filename"] = new_filepath
 
         merged_values = {**values, **new_filename}
 
