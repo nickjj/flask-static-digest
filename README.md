@@ -494,7 +494,7 @@ to do both things. Feel free to `CTRL + F` around the [code
 base](https://github.com/nickjj/flask-static-digest/blob/master/flask_static_digest/digester.py)
 for `hashlib` and `gzip` and you'll find the related code.
 
-So with that said, here's a work flow you can do to deal with this today:
+**So with that said, here's a work flow you can do to deal with this today:**
 
 - User uploads file
 - Your Flask app potentially md5 tags / gzips the file if necessary
