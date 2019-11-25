@@ -67,6 +67,7 @@ configuring and using this extension too.
   - [How do you use this extension with Webpack or another build tool?](#how-do-you-use-this-extension-with-webpack-or-another-build-tool)
   - [Migrating from Flask-Webpack](#migrating-from-flask-webpack)
   - [How do you use this extension with Docker?](#how-do-you-use-this-extension-with-docker)
+  - [What about user uploaded files?](#what-about-user-uploaded-files)
 - [About the author](#about-the-author)
 
 ## Installation
@@ -433,6 +434,77 @@ leverages Docker's build arguments to only compile the static files when
 `FLASK_ENV` is set to `production`. The key files to look at are the
 `Dockerfile`, `docker-compose.yml` and `.env` files. That wires up the build
 arguments and env variables to make it work.
+
+### What about user uploaded files?
+
+Let's say that besides having static files like your logo and CSS / JavaScript
+bundles you also have files uploaded by users. This could be things like a user
+avatar, blog post images or anything else.
+
+**You would still want to md5 tag and gzip these files but now we've run into a
+situation**. The `flask digest compile` command is meant to be run at deploy
+time and it could potentially be run from your dev box, inside of a Docker
+image, on a CI server or your production server. In these cases you wouldn't
+have access to the user uploaded files.
+
+But at the same time you have users uploading files at run time. They are
+changing all the time.
+
+**Needless to say you can't use the `flask digest compile` command**. The
+`cache_manifest.json` file should be reserved for files that exist in your
+code repo (such as your CSS / JS bundles, maybe a logo, fonts, etc.).
+
+The above files do not change at run time and align well with running the
+`flask digest compile` command at deploy time.
+
+For user uploaded content you wouldn't ever write these entries to the manifest
+JSON file. Instead, you would typically upload your files to disk, S3 or
+somewhere else and then save the file name of the file you uploaded into your
+local database.
+
+So now when you reference a user uploaded file (let's say an avatar), you would
+loop over your users from the database and reference the file name from the DB.
+
+There's no need for a manifest file to store the user uploaded files because
+the database has a reference to the real name and then you are dynamically
+referencing that in your template helper (`static_url_for`), so it's never a
+hard coded thing that changes at the template level.
+
+What's cool about this is you already did the database query to retrieve the
+record(s) from the database, so there's no extra database work to do. All you
+have to do is reference the file name field that's a part of your model.
+
+But that doesn't fully solve the problem. You'll still want to md5 tag and gzip
+your user uploaded content at run time and you would want to do this before you
+save the uploaded file into its final destination (local file system, S3,
+etc.).
+
+This can be done completely separate from this extension and it's really going
+to vary depending on where you host your user uploaded content. For example
+some CDNs will automatically create gzipped files for you and they use things
+like an ETag header in the response to include a unique file name (and this is
+what you can store in your DB).
+
+So maybe md5 hashing and maybe gzipping your user uploaded content becomes an
+app specific responsibility, although I'm not opposed to maybe creating helper
+functions you can use but that would need to be thought out carefully.
+
+However the implementation is not bad. It's really only about 5 lines of code
+to do both things. Feel free to `CTRL + F` around the [code
+base](https://github.com/nickjj/flask-static-digest/blob/master/flask_static_digest/digester.py)
+for `hashlib` and `gzip` and you'll find the related code.
+
+So with that said, here's a work flow you can do to deal with this today:
+
+- User uploads file
+- Your Flask app potentially md5 tags / gzips the file if necessary
+- Your Flask app saves the file name + gzipped file to its final destination (local file system, S3, etc.)
+- Your Flask app saves the final unique file name to your database
+
+That final unique file name would be the md5 tagged version of the file that
+you created or the unique file name that your CDN returned back to you. I hope
+that clears up how to deal with user uploaded files and efficiently serving
+them!
 
 ## About the author
 
