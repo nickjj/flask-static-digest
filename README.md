@@ -450,9 +450,10 @@ have access to the user uploaded files.
 But at the same time you have users uploading files at run time. They are
 changing all the time.
 
-**Needless to say you can't use the `flask digest compile` command**. The
-`cache_manifest.json` file should be reserved for files that exist in your
-code repo (such as your CSS / JS bundles, maybe a logo, fonts, etc.).
+**Needless to say you can't use the `flask digest compile` command to digest
+user uploaded files**. The `cache_manifest.json` file should be reserved for
+files that exist in your code repo (such as your CSS / JS bundles, maybe a
+logo, fonts, etc.).
 
 The above files do not change at run time and align well with running the
 `flask digest compile` command at deploy time.
