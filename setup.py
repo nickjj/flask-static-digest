@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="Flask-Static-Digest",
-    version="0.1.2",
+    version="0.1.3",
     author="Nick Janetakis",
     author_email="nick.janetakis@gmail.com",
     url="https://github.com/nickjj/flask-static-digest",

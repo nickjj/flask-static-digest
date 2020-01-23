@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.3
+
+*Released: January 23rd 2020*
+
+- Add support for Windows
+
 ## v0.1.2
 
 *Released: October 30th 2019*
