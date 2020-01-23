@@ -101,7 +101,7 @@ def _generate_manifest(files, gzip_files, output_path):
     manifest = {}
 
     for file in files:
-        rel_file_path = os.path.relpath(file, output_path)
+        rel_file_path = os.path.relpath(file, output_path).replace("\\", "/")
 
         file_name, file_extension = os.path.splitext(rel_file_path)
 
