@@ -20,7 +20,8 @@ def compile():
     _compile(current_app.static_folder,
              current_app.static_folder,
              current_app.config.get("FLASK_STATIC_DIGEST_BLACKLIST_FILTER"),
-             current_app.config.get("FLASK_STATIC_DIGEST_GZIP_FILES"))
+             current_app.config.get("FLASK_STATIC_DIGEST_GZIP_FILES"),
+             current_app.config.get("FLASK_STATIC_DIGEST_PAIRS"))
 
 
 @digest.command()

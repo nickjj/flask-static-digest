@@ -9,7 +9,7 @@ import shutil
 DIGESTED_FILE_REGEX = r"-[a-f\d]{32}"
 
 
-def compile(input_path, output_path, digest_blacklist_filter, gzip_files):
+def compile(input_path, output_path, digest_blacklist_filter, gzip_files, pairs):
     """
     Generate md5 tagged static files that are also compressed with gzip.
 
@@ -21,6 +21,8 @@ def compile(input_path, output_path, digest_blacklist_filter, gzip_files):
     :type digest_blacklist_filter: list
     :param gzip_files: Whether or not gzipped files will be generated
     :type gzip_files: bool
+    :param pairs: If you have files that reference eachother.
+    :type pairs: list of str [['a','b']] a references b
     :return: None
     """
     if not os.path.exists(input_path):
@@ -34,6 +36,10 @@ def compile(input_path, output_path, digest_blacklist_filter, gzip_files):
     files = _filter_files(input_path, digest_blacklist_filter)
     manifest = _generate_manifest(files, gzip_files, output_path)
     _save_manifest(manifest, output_path)
+
+    if pairs:
+        _change_pair_references(manifest,output_path,pairs)
+  
 
     print(f"Check your digested files at '{output_path}'")
     return None
@@ -148,5 +154,27 @@ def _write_to_disk(file, digested_file_path, gzip_files, input_path):
         with open(full_digested_file_path, "rb") as f_in:
             with gzip.open(f"{full_digested_file_path}.gz", "wb") as f_out:
                 shutil.copyfileobj(f_in, f_out)
+    return None
+
+
+def _change_pair_references(manifest,output_path,pairs):
+    for pair in pairs:
+        for k in manifest:
+            if pair[0] == k.split('/')[-1]:
+                full_digested_file_path = output_path +'/' +manifest[k]
+                with open(full_digested_file_path,'r+') as f:
+                    s = f.read()
+                    pre_path = k.split('/')
+                    del pre_path[-1]
+                    pre_path = '/'.join(pre_path)
+                    old_path = 'static/'+pre_path+'/'+pair[1]
+                    if old_path not in s:
+                        print(old_path+ ' not found')
+                    else:
+                        new_path = manifest['/'.join(old_path.split('/')[1:])]
+                        s = s.replace(old_path,'static/'+new_path)
+                        f.seek(0)
+                        f.write(s)
+                        f.truncate()
 
     return None
