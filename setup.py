@@ -12,7 +12,7 @@ setup(
     package_data={"Flask-Static-Digest": ["VERSION"]},
     packages=["flask_static_digest"],
     platforms="any",
-    python_requires=">=3.5",
+    python_requires=">=3.6",
     zip_safe=False,
     install_requires=[
         "Flask>=1.0"
