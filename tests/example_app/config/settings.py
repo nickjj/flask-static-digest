@@ -1,1 +1,2 @@
 FLASK_STATIC_DIGEST_BLACKLIST_FILTER = [".txt"]
+FLASK_STATIC_DIGEST_PAIRS = [['foo.js','bar.html']]
