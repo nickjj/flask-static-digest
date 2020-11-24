@@ -1,25 +1,43 @@
 # Changelog
 
-## v0.1.3
+All notable changes to this project will be documented in this file.
 
-*Released: January 23rd 2020*
+The format is based on [Keep a
+Changelog](https://keepachangelog.com/en/1.0.0/).
 
-- Add support for Windows
+## [Unreleased]
 
-## v0.1.2
+### Fixed
 
-*Released: October 30th 2019*
+- `static_url_for` will now throw a 404 instead of a 500 if you have an invalid `filename`
 
-- Fix the version being read in by `setup.py`
+## [0.1.3] - 2020-01-23
 
-## v0.1.1
+### Added
 
-*Released: October 30th 2019*
+- Windows support
+
+## [0.1.2] - 2020-10-30
+
+### Fixed
+
+- Really fix the version being read dynamically in `setup.py`
+
+## [0.1.1] - 2020-10-30
+
+### Fixed
 
 - Attempt to fix the version being read dynamically in `setup.py`
 
-## v0.1.0
+## [0.1.0] - 2019-10-30
 
-*Released: October 30th 2019*
+### Added
 
-- Initial release
+- Everything!
+
+[Unreleased]: https://github.com/nickjj/flask-static-digest/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/nickjj/flask-static-digest/compare/v0.1.2...v0.1.3
+[0.1.2]: https://github.com/nickjj/flask-static-digest/compare/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/nickjj/flask-static-digest/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/nickjj/flask-static-digest/releases/tag/v0.1.0
+
