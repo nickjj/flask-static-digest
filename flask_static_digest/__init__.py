@@ -57,7 +57,10 @@ class FlaskStaticDigest(object):
         filename = values.get("filename")
 
         if filename:
-            new_filename["filename"] = self.manifest.get(filename)
+            # If the manifest lookup fails then use the original filename
+            # so that Flask doesn't throw a 500, but instead a proper 404.
+            # The above only happens if your template has an invalid filename.
+            new_filename["filename"] = self.manifest.get(filename, filename)
 
         merged_values = {**values, **new_filename}
 
