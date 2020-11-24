@@ -7,6 +7,10 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+- Nothing yet!
+
+## [0.1.4] - 2020-11-24
+
 ### Fixed
 
 - `static_url_for` will now throw a 404 instead of a 500 if you have an invalid `filename`
@@ -35,7 +39,8 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Everything!
 
-[Unreleased]: https://github.com/nickjj/flask-static-digest/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/nickjj/flask-static-digest/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/nickjj/flask-static-digest/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/nickjj/flask-static-digest/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/nickjj/flask-static-digest/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/nickjj/flask-static-digest/compare/v0.1.0...v0.1.1
