@@ -47,11 +47,15 @@ This 25 minute video goes over using this extension but it also spends a lot
 of time on the "why" where we cover topics like cache busting and why IMO you
 might want to use this extension in all of your Flask projects.
 
+If you prefer reading instead of video, this README file covers installing,
+configuring and using this extension too.
+
 [![Demo
 Video](https://img.youtube.com/vi/-Xd84hlIjkI/0.jpg)](https://www.youtube.com/watch?v=-Xd84hlIjkI)
 
-If you prefer reading instead of video, this README file covers installing,
-configuring and using this extension too.
+#### Changes since this video
+
+- `FLASK_STATIC_DIGEST_HOST_URL` has been added to configure an optional external host, aka. CDN ([explained below](#configuring-this-extension))
 
 ## Table of Contents
 
@@ -227,8 +231,10 @@ leaving you with the original `images/flask.png`.
 ## Configuring this extension
 
 By default this extension will md5 tag all files it finds in your configured
-`static_folder`. It will also create gzipped versions of each file. If you
-don't like that behavior there's 2 options you can optionally configure:
+`static_folder`. It will also create gzipped versions of each file and it won't
+prefix your static files with an external host.
+
+If you don't like any of this behavior, you can optionally configure:
 
 ```py
 FLASK_STATIC_DIGEST_BLACKLIST_FILTER = []
@@ -238,6 +244,11 @@ FLASK_STATIC_DIGEST_BLACKLIST_FILTER = []
 FLASK_STATIC_DIGEST_GZIP_FILES = True
 # When set to False then gzipped files will not be created but static files
 # will still get md5 tagged.
+
+FLASK_STATIC_DIGEST_HOST_URL = None
+# When set to a value such as https://cdn.example.com and you use static_url_for
+# it will prefix your static path with this URL. This would be useful if you
+# host your files from a CDN. Make sure to include the protocol (aka. https://).
 ```
 
 You can override these defaults in your Flask app's config file.
@@ -275,6 +286,14 @@ But now take a look at the output this produces:
 
 ```html
 <img src="/images/flask-f86b271a51b3cfad5faa9299dacd987f.png"
+     width="480" height="188" alt="Flask logo" />
+```
+
+Or if you set `FLASK_STATIC_DIGEST_HOST_URL = "https://cdn.example.com"` it
+would produce:
+
+```html
+<img src="https://cdn.example.com/images/flask-f86b271a51b3cfad5faa9299dacd987f.png"
      width="480" height="188" alt="Flask logo" />
 ```
 

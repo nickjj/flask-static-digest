@@ -1,6 +1,8 @@
 import json
 import os
 
+from urllib.parse import urljoin
+
 from flask import url_for as flask_url_for
 
 
@@ -21,7 +23,9 @@ class FlaskStaticDigest(object):
         """
         app.config.setdefault("FLASK_STATIC_DIGEST_BLACKLIST_FILTER", [])
         app.config.setdefault("FLASK_STATIC_DIGEST_GZIP_FILES", True)
+        app.config.setdefault("FLASK_STATIC_DIGEST_HOST_URL", None)
 
+        self.host_url = app.config.get("FLASK_STATIC_DIGEST_HOST_URL")
         self.manifest_path = os.path.join(app.static_folder,
                                           "cache_manifest.json")
         self.has_manifest = os.path.exists(self.manifest_path)
@@ -42,8 +46,9 @@ class FlaskStaticDigest(object):
     def static_url_for(self, endpoint, **values):
         """
         This function uses Flask's url_for under the hood and accepts the
-        same arguments. The only difference is when a manifest is available
-        it will look up the filename from the manifest.
+        same arguments. The only differences are it will prefix a host URL if
+        one exists and if a manifest is available it will look up the filename
+        from the manifest.
 
         :param endpoint: The endpoint of the URL
         :type endpoint: str
@@ -51,7 +56,10 @@ class FlaskStaticDigest(object):
         :return: Static file path.
         """
         if not self.has_manifest:
-            return flask_url_for(endpoint, **values)
+            if self.host_url:
+                return urljoin(self.host_url, values.get("filename"))
+            else:
+                return flask_url_for(endpoint, **values)
 
         new_filename = {}
         filename = values.get("filename")
@@ -64,4 +72,7 @@ class FlaskStaticDigest(object):
 
         merged_values = {**values, **new_filename}
 
-        return flask_url_for(endpoint, **merged_values)
+        if self.host_url:
+            return urljoin(self.host_url, merged_values.get("filename"))
+        else:
+            return flask_url_for(endpoint, **merged_values)
