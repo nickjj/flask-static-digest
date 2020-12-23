@@ -55,7 +55,7 @@ Video](https://img.youtube.com/vi/-Xd84hlIjkI/0.jpg)](https://www.youtube.com/wa
 
 #### Changes since this video
 
-- `FLASK_STATIC_DIGEST_HOST_URL` has been added to configure an optional external host, aka. CDN ([explained below](#configuring-this-extension))
+- `FLASK_STATIC_DIGEST_HOST_URL` has been added to configure an optional external host, aka. CDN ([explained here](#configuring-this-extension))
 
 ## Table of Contents
 
