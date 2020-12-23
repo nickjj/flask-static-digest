@@ -9,6 +9,12 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Nothing yet!
 
+## [0.2.0] - 2020-12-23
+
+### Added
+
+- Support to prepend your static paths with a host / CDN URL via `FLASK_STATIC_DIGEST_HOST_URL`
+
 ## [0.1.4] - 2020-11-24
 
 ### Fixed
@@ -39,7 +45,8 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Everything!
 
-[Unreleased]: https://github.com/nickjj/flask-static-digest/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/nickjj/flask-static-digest/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/nickjj/flask-static-digest/compare/v0.1.4...v0.2.0
 [0.1.4]: https://github.com/nickjj/flask-static-digest/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/nickjj/flask-static-digest/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/nickjj/flask-static-digest/compare/v0.1.1...v0.1.2
