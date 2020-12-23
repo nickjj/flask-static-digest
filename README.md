@@ -3,8 +3,13 @@
 It is a Flask extension that will help make your static files production ready
 with very minimal effort on your part. It does this by md5 tagging and gzipping
 your static files after running a `flask digest compile` command that this
-extension adds to your Flask app. It should be the last thing you do to your
-static files before uploading them to your server or CDN.
+extension adds to your Flask app.
+
+It should be the last thing you do to your static files before uploading them
+to your server or CDN. Speaking of which, if you're using a CDN this extension
+optionally lets you configure a host URL that will get prepended to your static
+file paths. If you're not using a CDN, no problem everything will work as you
+would expect by default.
 
 Other web frameworks like Django, Ruby on Rails and Phoenix all have this
 feature built into their framework, and now with this extension Flask does too.
