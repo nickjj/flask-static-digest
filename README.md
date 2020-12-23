@@ -1,4 +1,4 @@
-# What is Flask-Static-Digest? [![Build Status](https://travis-ci.org/nickjj/flask-static-digest.svg?branch=master)](https://travis-ci.org/nickjj/flask-static-digest)
+# What is Flask-Static-Digest? ![CI](https://github.com/nickjj/flask-static-digest/workflows/CI/badge.svg?branch=master)
 
 It is a Flask extension that will help make your static files production ready
 with very minimal effort on your part. It does this by md5 tagging and gzipping
