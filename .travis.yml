@@ -41,7 +41,7 @@ script:
     flask run &
     sleep 5
     && curl http://localhost:5000
-    | grep -q 'https://cdn.example.com/static/css/app-d41d8cd98f00b204e9800998ecf8427e.css'
+    | grep -q 'https://cdn.example.com/css/app-d41d8cd98f00b204e9800998ecf8427e.css'
     && (echo 'Stylesheet is md5 tagged test: pass' && exit 0)
     || (echo 'Stylesheet is md5 tagged test: fail' && exit 1)
 
@@ -56,6 +56,6 @@ script:
     flask run -p 5001 &
     sleep 5
     && curl http://localhost:5001
-    | grep -q 'https://cdn.example.com/static/js/app.js'
+    | grep -q 'https://cdn.example.com/js/app.js'
     && (echo 'Javascript is not md5 tagged test: pass' && exit 0)
     || (echo 'Javascript is not md5 tagged test: fail' && exit 1)
