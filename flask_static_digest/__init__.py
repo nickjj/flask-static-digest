@@ -26,6 +26,8 @@ class FlaskStaticDigest(object):
         app.config.setdefault("FLASK_STATIC_DIGEST_HOST_URL", None)
 
         self.host_url = app.config.get("FLASK_STATIC_DIGEST_HOST_URL")
+        self.static_url_path = app.static_url_path
+
         self.manifest_path = os.path.join(app.static_folder,
                                           "cache_manifest.json")
         self.has_manifest = os.path.exists(self.manifest_path)
@@ -43,6 +45,10 @@ class FlaskStaticDigest(object):
 
         return manifest_dict
 
+    def _prepend_host_url(self, host, filename):
+        return urljoin(self.host_url,
+                       "/".join([self.static_url_path, filename]))
+
     def static_url_for(self, endpoint, **values):
         """
         This function uses Flask's url_for under the hood and accepts the
@@ -57,7 +63,8 @@ class FlaskStaticDigest(object):
         """
         if not self.has_manifest:
             if self.host_url:
-                return urljoin(self.host_url, values.get("filename"))
+                return self._prepend_host_url(self.host_url,
+                                              values.get("filename"))
             else:
                 return flask_url_for(endpoint, **values)
 
@@ -73,6 +80,7 @@ class FlaskStaticDigest(object):
         merged_values = {**values, **new_filename}
 
         if self.host_url:
-            return urljoin(self.host_url, merged_values.get("filename"))
+            return self._prepend_host_url(self.host_url,
+                                          merged_values.get("filename"))
         else:
             return flask_url_for(endpoint, **merged_values)
