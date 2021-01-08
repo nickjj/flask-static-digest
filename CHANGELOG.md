@@ -33,13 +33,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Windows support
 
-## [0.1.2] - 2020-10-30
+## [0.1.2] - 2019-10-30
 
 ### Fixed
 
 - Really fix the version being read dynamically in `setup.py`
 
-## [0.1.1] - 2020-10-30
+## [0.1.1] - 2019-10-30
 
 ### Fixed
 
