@@ -472,6 +472,7 @@ If you're deploying to Heroku using the Python buildpack you can follow these 2 
 
 set -e
 
+echo "-----> Digesting static files"
 cd "${1}" && flask digest compile
 ```
 
