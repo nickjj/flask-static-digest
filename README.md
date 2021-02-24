@@ -76,6 +76,7 @@ Video](https://img.youtube.com/vi/-Xd84hlIjkI/0.jpg)](https://www.youtube.com/wa
   - [How do you use this extension with Webpack or another build tool?](#how-do-you-use-this-extension-with-webpack-or-another-build-tool)
   - [Migrating from Flask-Webpack](#migrating-from-flask-webpack)
   - [How do you use this extension with Docker?](#how-do-you-use-this-extension-with-docker)
+  - [How do you use this extension with Heroku?](#how-do-you-use-this-extension-with-heroku)
   - [What about user uploaded files?](#what-about-user-uploaded-files)
 - [About the author](#about-the-author)
 
@@ -458,6 +459,30 @@ leverages Docker's build arguments to only compile the static files when
 `FLASK_ENV` is set to `production`. The key files to look at are the
 `Dockerfile`, `docker-compose.yml` and `.env` files. That wires up the build
 arguments and env variables to make it work.
+
+### How do you use this extension with Heroku?
+
+If you're deploying to Heroku using the Python buildpack you can follow these 2 steps:
+
+1. Create a `bin/post_compile` file in your project's source code
+2. Copy the lines below into the `bin/post_compile` file, save it and commit the changes
+
+```sh
+#!/usr/bin/env bash
+
+set -e
+
+cd "${1}" && flask digest compile
+```
+
+The next time you push your code this script will run after your pip
+dependencies are installed. It will run before your slug is compiled which
+ensures that the digested files are available before any traffic is served to
+your Dyno.
+
+You can view how this file gets executed by Heroku in their [Python buildpack's
+source
+code](https://github.com/heroku/heroku-buildpack-python/blob/main/bin/steps/hooks/post_compile).
 
 ### What about user uploaded files?
 
