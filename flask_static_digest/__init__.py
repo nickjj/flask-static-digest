@@ -1,8 +1,7 @@
 import json
 import os
 
-from urllib.parse import urljoin
-
+from urllib.parse import urljoin, urlparse
 from flask import url_for as flask_url_for
 
 
@@ -25,7 +24,8 @@ class FlaskStaticDigest(object):
         app.config.setdefault("FLASK_STATIC_DIGEST_GZIP_FILES", True)
         app.config.setdefault("FLASK_STATIC_DIGEST_HOST_URL", None)
 
-        self.host_url = app.config.get("FLASK_STATIC_DIGEST_HOST_URL")
+        self.host_url, self.prefix = parse_digest_host_url(
+            app.config.get("FLASK_STATIC_DIGEST_HOST_URL"))
         self.static_url_path = app.static_url_path
 
         self.manifest_path = os.path.join(app.static_folder,
@@ -46,8 +46,10 @@ class FlaskStaticDigest(object):
         return manifest_dict
 
     def _prepend_host_url(self, host, filename):
-        return urljoin(self.host_url,
-                       "/".join([self.static_url_path, filename]))
+        parts = list( # removing empty strings
+            filter(None, [self.prefix, self.static_url_path, filename]))
+
+        return urljoin(self.host_url, "/".join(parts))
 
     def static_url_for(self, endpoint, **values):
         """
@@ -84,3 +86,28 @@ class FlaskStaticDigest(object):
                                           merged_values.get("filename"))
         else:
             return flask_url_for(endpoint, **merged_values)
+
+
+def parse_digest_host_url(host_url_prefix):
+    """
+    Detect if host_url_prefix contains a path element and returns a tuple with
+    the elements (host_part, path_part), for example for
+
+    host_url_prefix = "https://cdn.example.com/myapp/some/path/"
+
+    This function should return:
+    ('https://cdn.example.com', "/myapp/some/path/")
+
+    :param host_url_prefix: CDN like URL prefix
+    :type host_url_prefix: str
+    :return: tuple with the elements (host_part, path_part).
+    """
+    scheme, netloc, path, _, _, _ = urlparse(host_url_prefix)
+
+    if path and path.startswith("/"):
+        path = path[1:]
+
+    if path and path.endswith("/"):
+        path = path[:-1]
+
+    return (f"{scheme}://{netloc}", path)
