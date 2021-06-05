@@ -23,12 +23,16 @@ jobs:
 
       - name: "Install dependencies"
         run: |
-          pip3 install flake8 Flask==1.1.2
+          pip3 install flake8 Flask==1.1.2 pytest
           pip3 install -e .
 
       - name: "Lint code base"
         run: |
           flake8 .
+
+      - name: "Run pytest suite"
+        run: |
+          python -m pytest tests/
 
       - name: "Run test suite"
         run: |
