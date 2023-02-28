@@ -3,7 +3,7 @@ import os
 
 from urllib.parse import urljoin
 
-from flask import url_for as flask_url_for
+from flask import Flask, url_for as flask_url_for
 
 
 class FlaskStaticDigest(object):
@@ -27,53 +27,31 @@ class FlaskStaticDigest(object):
 
         self.host_url = app.config.get("FLASK_STATIC_DIGEST_HOST_URL")
 
-        scaffolds = [app, *app.blueprints.values()]
-        for s in scaffolds:
-            scaffold = _StaticManifestCandidate(s, self.host_url)
-            if scaffold.has_manifest:
-                app.add_template_global(scaffold.static_url_for)
+        self.manifests = {}
 
+        for scaffold in [app, *app.blueprints.values()]:
 
-class _StaticManifestCandidate(object):
+            if not scaffold.static_folder:
+                continue
 
-    has_manifest = False
+            manifest_path = os.path.join(scaffold.static_folder,
+                                         "cache_manifest.json")
+            has_manifest = os.path.exists(manifest_path)
 
-    def __init__(self, scaffold, host_url):
-        """
-        A static candidate wraps a flask.Scaffold (app or blueprint),
-        which may have a static folder, and may have a cache_manifest.json.
+            if has_manifest:
+                manifest = self._load_manifest(scaffold, manifest_path)
+                self.manifests[self._endpoint_for(scaffold)] = manifest
 
-        :param scaffold: A flask.Scaffold instance,
-            presumably a flask.Flask or flask.Blueprint
-        :param host_url: alternative host for assets
-        """
-        if not scaffold.static_folder:
-            return
+        app.add_template_global(self.static_url_for)
 
-        self.scaffold = scaffold
+    def _endpoint_for(self, scaffold):
+        if isinstance(scaffold, Flask):
+            return 'static'
+        else:
+            return '.'.join([scaffold.name, 'static'])
 
-        self.host_url = host_url
-
-        self.static_url_path = self.scaffold.static_url_path
-
-        self.manifest_path = os.path.join(self.scaffold.static_folder,
-                                          "cache_manifest.json")
-        self.has_manifest = os.path.exists(self.manifest_path)
-
-        self.manifest = {}
-
-        if self.has_manifest:
-            self.manifest = self._load_manifest(scaffold)
-
-    def _load_manifest(self, scaffold):
-        with scaffold.open_resource(self.manifest_path, "r") as f:
-            manifest_dict = json.load(f)
-
-        return manifest_dict
-
-    def _prepend_host_url(self, host, filename):
-        return urljoin(self.host_url,
-                       "/".join([self.static_url_path, filename]))
+    def _prepend_host_url(self, flask_url):
+        return urljoin(self.host_url, flask_url)
 
     def static_url_for(self, endpoint, **values):
         """
@@ -87,13 +65,6 @@ class _StaticManifestCandidate(object):
         :param values: Arguments of the URL rule
         :return: Static file path.
         """
-        if not self.has_manifest:
-            if self.host_url:
-                return self._prepend_host_url(self.host_url,
-                                              values.get("filename"))
-            else:
-                return flask_url_for(endpoint, **values)
-
         new_filename = {}
         filename = values.get("filename")
 
@@ -101,12 +72,18 @@ class _StaticManifestCandidate(object):
             # If the manifest lookup fails then use the original filename
             # so that Flask doesn't throw a 500, but instead a proper 404.
             # The above only happens if your template has an invalid filename.
-            new_filename["filename"] = self.manifest.get(filename, filename)
+            manifest = self.manifests.get(endpoint)
+            if manifest:
+                new_filename["filename"] = manifest.get(filename, filename)
 
         merged_values = {**values, **new_filename}
 
-        if self.host_url:
-            return self._prepend_host_url(self.host_url,
-                                          merged_values.get("filename"))
-        else:
-            return flask_url_for(endpoint, **merged_values)
+        flask_url = flask_url_for(endpoint, **merged_values)
+
+        return self._prepend_host_url(flask_url)
+
+    def _load_manifest(self, scaffold, manifest_path):
+        with scaffold.open_resource(manifest_path, "r") as f:
+            manifest_dict = json.load(f)
+
+        return manifest_dict
