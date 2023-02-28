@@ -25,22 +25,38 @@ class FlaskStaticDigest(object):
         app.config.setdefault("FLASK_STATIC_DIGEST_GZIP_FILES", True)
         app.config.setdefault("FLASK_STATIC_DIGEST_HOST_URL", None)
 
-        self.host_url = app.config.get("FLASK_STATIC_DIGEST_HOST_URL")
-        self.static_url_path = app.static_url_path
+        scaffolds = [app, *app.blueprints.values()]
+        for s in scaffolds:
+            scaffold = _ScaffoldStaticDigest(app, s)
+            if scaffold.has_manifest:
+                app.add_template_global(scaffold.static_url_for)
 
-        self.manifest_path = os.path.join(app.static_folder,
+
+class _ScaffoldStaticDigest(object):
+
+    has_manifest = False
+
+    def __init__(self, app, scaffold=None):
+        self.app = app
+        self.scaffold = scaffold or app
+        if not self.scaffold.static_folder:
+            return
+
+        self.host_url = app.config.get("FLASK_STATIC_DIGEST_HOST_URL")
+
+        self.static_url_path = self.scaffold.static_url_path
+
+        self.manifest_path = os.path.join(self.scaffold.static_folder,
                                           "cache_manifest.json")
         self.has_manifest = os.path.exists(self.manifest_path)
 
         self.manifest = {}
 
         if self.has_manifest:
-            self.manifest = self._load_manifest(app)
+            self.manifest = self._load_manifest(scaffold)
 
-        app.add_template_global(self.static_url_for)
-
-    def _load_manifest(self, app):
-        with app.open_resource(self.manifest_path, "r") as f:
+    def _load_manifest(self, scaffold):
+        with scaffold.open_resource(self.manifest_path, "r") as f:
             manifest_dict = json.load(f)
 
         return manifest_dict
