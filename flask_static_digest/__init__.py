@@ -72,7 +72,7 @@ class _StaticManifestCandidate(object):
         return manifest_dict
 
     def _prepend_host_url(self, host, filename):
-        return urljoin(self._host_url,
+        return urljoin(self.host_url,
                        "/".join([self.static_url_path, filename]))
 
     def static_url_for(self, endpoint, **values):
