@@ -25,24 +25,34 @@ class FlaskStaticDigest(object):
         app.config.setdefault("FLASK_STATIC_DIGEST_GZIP_FILES", True)
         app.config.setdefault("FLASK_STATIC_DIGEST_HOST_URL", None)
 
+        self.host_url = app.config.get("FLASK_STATIC_DIGEST_HOST_URL")
+
         scaffolds = [app, *app.blueprints.values()]
         for s in scaffolds:
-            scaffold = _ScaffoldStaticDigest(app, s)
+            scaffold = _StaticManifestCandidate(s, self.host_url)
             if scaffold.has_manifest:
                 app.add_template_global(scaffold.static_url_for)
 
 
-class _ScaffoldStaticDigest(object):
+class _StaticManifestCandidate(object):
 
     has_manifest = False
 
-    def __init__(self, app, scaffold=None):
-        self.app = app
-        self.scaffold = scaffold or app
-        if not self.scaffold.static_folder:
+    def __init__(self, scaffold, host_url):
+        """
+        A static candidate wraps a flask.Scaffold (app or blueprint),
+        which may have a static folder, and may have a cache_manifest.json.
+
+        :param scaffold: A flask.Scaffold instance,
+            presumably a flask.Flask or flask.Blueprint
+        :param host_url: alternative host for assets
+        """
+        if not scaffold.static_folder:
             return
 
-        self.host_url = app.config.get("FLASK_STATIC_DIGEST_HOST_URL")
+        self.scaffold = scaffold
+
+        self.host_url = host_url
 
         self.static_url_path = self.scaffold.static_url_path
 
@@ -62,7 +72,7 @@ class _ScaffoldStaticDigest(object):
         return manifest_dict
 
     def _prepend_host_url(self, host, filename):
-        return urljoin(self.host_url,
+        return urljoin(self._host_url,
                        "/".join([self.static_url_path, filename]))
 
     def static_url_for(self, endpoint, **values):
