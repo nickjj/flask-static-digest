@@ -3,8 +3,7 @@ import os
 
 from urllib.parse import urljoin
 
-from flask import url_for as flask_url_for
-from flask.globals import _cv_request
+from flask import _request_ctx_stack, url_for as flask_url_for
 
 
 class FlaskStaticDigest(object):
@@ -68,7 +67,7 @@ class FlaskStaticDigest(object):
 
         # note: this is taken from flask's url_for
         # ( resolves relative endpoints )
-        req_ctx = _cv_request.get(None)
+        req_ctx = _request_ctx_stack.top
         if req_ctx is not None:
             blueprint_name = req_ctx.request.blueprint
 
