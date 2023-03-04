@@ -3,7 +3,8 @@ import os
 
 from urllib.parse import urljoin
 
-from flask import Flask, url_for as flask_url_for
+from flask import url_for as flask_url_for
+from flask.globals import _cv_request
 
 
 class FlaskStaticDigest(object):
@@ -29,10 +30,9 @@ class FlaskStaticDigest(object):
 
         self.manifests = {}
 
-        for scaffold in [app, *app.blueprints.values()]:
-
-            if not scaffold.static_folder:
-                continue
+        def ingestScaffold(endpoint, scaffold):
+            if not scaffold.has_static_folder:
+                return
 
             manifest_path = os.path.join(scaffold.static_folder,
                                          "cache_manifest.json")
@@ -40,15 +40,13 @@ class FlaskStaticDigest(object):
 
             if has_manifest:
                 manifest = self._load_manifest(scaffold, manifest_path)
-                self.manifests[self._endpoint_for(scaffold)] = manifest
+                self.manifests[endpoint] = manifest
+
+        ingestScaffold('static', app)
+        for endpoint, scaffold in app.blueprints.items():
+            ingestScaffold(endpoint + '.static', scaffold)
 
         app.add_template_global(self.static_url_for)
-
-    def _endpoint_for(self, scaffold):
-        if isinstance(scaffold, Flask):
-            return 'static'
-        else:
-            return '.'.join([scaffold.name, 'static'])
 
     def _prepend_host_url(self, flask_url):
         return urljoin(self.host_url, flask_url)
@@ -67,6 +65,21 @@ class FlaskStaticDigest(object):
         """
         new_filename = {}
         filename = values.get("filename")
+
+        # note: this is taken from flask's url_for
+        # ( resolves relative endpoints )
+        req_ctx = _cv_request.get(None)
+        if req_ctx is not None:
+            blueprint_name = req_ctx.request.blueprint
+
+            # If the endpoint starts with "." and the request matches a
+            # blueprint, the endpoint is relative to the blueprint.
+            if endpoint[:1] == ".":
+                if blueprint_name is not None:
+                    endpoint = f"{blueprint_name}{endpoint}"
+                else:
+                    endpoint = endpoint[1:]
+        # endnote
 
         if filename:
             # If the manifest lookup fails then use the original filename
