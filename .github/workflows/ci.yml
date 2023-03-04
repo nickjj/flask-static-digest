@@ -99,17 +99,17 @@ jobs:
           && (echo 'Stylesheet is md5 tagged test (index): pass' && exit 0) \
           || (echo 'Stylesheet is md5 tagged test (index): fail' && exit 1)
 
-          curl http://localhost:5000 \
-          | grep -q 'https://cdn.example.com/page-1/static/css/app-26e1223874615486e78e1612ed432e14.css' \
+          curl http://localhost:5000/page-1/ \
+          | grep -q 'https://cdn.example.com/page-1/static/app-26e1223874615486e78e1612ed432e14.css' \
           && (echo 'Stylesheet is md5 tagged test (page1): pass' && exit 0) \
           || (echo 'Stylesheet is md5 tagged test (page1): fail' && exit 1)
 
-          curl http://localhost:5000 \
-          | grep -q 'https://cdn.example.com/page-2/static/css/app-b84e7798a410485d12d404fae97bd763.css' \
+          curl http://localhost:5000/page-2 \
+          | grep -q 'https://cdn.example.com/page-2/static/app-b84e7798a410485d12d404fae97bd763.css' \
           && (echo 'Stylesheet is md5 tagged test (page2): pass' && exit 0) \
           || (echo 'Stylesheet is md5 tagged test (page2): fail' && exit 1)
 
-          curl http://localhost:5000 \
+          curl http://localhost:5000/page-1/a \
           | grep -q 'https://cdn.example.com/page-1/static/a/app-56af948255826f1052ba1dc074a31fd5.css' \
           && (echo 'Stylesheet is md5 tagged test (page1a): pass' && exit 0) \
           || (echo 'Stylesheet is md5 tagged test (page1a): fail' && exit 1)
