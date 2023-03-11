@@ -1,8 +1,8 @@
 from flask import Flask, render_template
 from flask_static_digest import FlaskStaticDigest
 
-from .page1.bp_page1 import bp_page1
-from .page2.bp_page2 import bp_page2
+from example.page1.bp_page1 import bp_page1
+from example.page2.bp_page2 import bp_page2
 
 flask_static_digest = FlaskStaticDigest()
 
