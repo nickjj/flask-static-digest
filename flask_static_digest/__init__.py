@@ -3,7 +3,7 @@ import os
 
 from urllib.parse import urljoin
 
-from flask import _request_ctx_stack, url_for as flask_url_for
+from flask import request, url_for as flask_url_for
 
 
 class FlaskStaticDigest(object):
@@ -67,9 +67,8 @@ class FlaskStaticDigest(object):
 
         # note: this is taken from flask's url_for
         # ( resolves relative endpoints )
-        req_ctx = _request_ctx_stack.top
-        if req_ctx is not None:
-            blueprint_name = req_ctx.request.blueprint
+        if request is not None:
+            blueprint_name = request.blueprint
 
             # If the endpoint starts with "." and the request matches a
             # blueprint, the endpoint is relative to the blueprint.
