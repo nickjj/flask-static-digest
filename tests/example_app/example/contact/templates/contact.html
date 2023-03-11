@@ -1,15 +1,12 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <br/>
-  <a href="/page-1/a">page 1 A</a>
-  <a href="/page-1/b">page 1 B</a>
-
-  <h2>Page 1A</h2>
-  This is an example application
+  <h2>Contact Us</h2>
+  <p>This is an example application</p>
 
   <p>{{ static_url_for(".static", filename="app.css") }}</p>
-  <p>{{ static_url_for("page_1.page_1a.static", filename="app.css") }}</p>
+  <p>{{ static_url_for("contact.static", filename="app.css") }}</p>
+  <p>{{ static_url_for("about.static", filename="app.css") }}</p>
 
   <link type="text/css" rel="stylesheet"
         href="{{ static_url_for('.static', filename='app.css') }}">

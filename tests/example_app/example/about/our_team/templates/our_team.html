@@ -2,14 +2,15 @@
 
 {% block body %}
   <br/>
-  <a href="/page-1/a">page 1 A</a>
-  <a href="/page-1/b">page 1 B</a>
+  <br/>
+  <a href="/about/our-story">Our Story</a>
+  <a href="/about/our-team">Our Team</a>
 
-  <h2>Currently on page 1</h2>
+  <h2>Our Team</h2>
+  <p>This is an example application</p>
 
   <p>{{ static_url_for(".static", filename="app.css") }}</p>
-  <p>{{ static_url_for("page_1.static", filename="app.css") }}</p>
-  <p>{{ static_url_for("page_2.static", filename="app.css") }}</p>
+  <p>{{ static_url_for("about.our_team.static", filename="app.css") }}</p>
 
   <link type="text/css" rel="stylesheet"
         href="{{ static_url_for('.static', filename='app.css') }}">

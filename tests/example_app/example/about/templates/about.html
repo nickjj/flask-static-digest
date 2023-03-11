@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <br/>
+  <br/>
+  <a href="/about/our-story">Our Story</a>
+  <a href="/about/our-team">Our Team</a>
+
+  <h2>About Us</h2>
+  <p>This is an example application</p>
+
+  <p>{{ static_url_for(".static", filename="app.css") }}</p>
+  <p>{{ static_url_for("about.static", filename="app.css") }}</p>
+  <p>{{ static_url_for("contact.static", filename="app.css") }}</p>
+
+  <link type="text/css" rel="stylesheet"
+        href="{{ static_url_for('.static', filename='app.css') }}">
+{% endblock %}
