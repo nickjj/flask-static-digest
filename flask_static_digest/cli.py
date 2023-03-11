@@ -18,7 +18,6 @@ def digest():
 def compile():
     """Generate optimized static files and a cache manifest."""
     for scaffold in [current_app, *current_app.blueprints.values()]:
-
         if not scaffold.static_folder:
             continue
 
@@ -34,7 +33,6 @@ def compile():
 def clean():
     """Remove generated static files and cache manifest."""
     for scaffold in [current_app, *current_app.blueprints.values()]:
-
         if not scaffold.static_folder:
             continue
 

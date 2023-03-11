@@ -1,4 +1,3 @@
-import pkg_resources
 from flask import Blueprint, render_template
 
 from .page1a.bp_page1a import bp_page1a
