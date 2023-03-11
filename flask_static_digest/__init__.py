@@ -47,9 +47,6 @@ class FlaskStaticDigest(object):
 
         app.add_template_global(self.static_url_for)
 
-    def _prepend_host_url(self, flask_url):
-        return urljoin(self.host_url, flask_url)
-
     def static_url_for(self, endpoint, **values):
         """
         This function uses Flask's url_for under the hood and accepts the
@@ -90,8 +87,7 @@ class FlaskStaticDigest(object):
         merged_values = {**values, **new_filename}
 
         flask_url = flask_url_for(endpoint, **merged_values)
-
-        return self._prepend_host_url(flask_url)
+        return urljoin(self.host_url, flask_url)
 
     def _load_manifest(self, scaffold, manifest_path):
         with scaffold.open_resource(manifest_path, "r") as f:
