@@ -1,16 +1,11 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block body %}
   <h2>Currently on page 2</h2>
 
-  <!-- relative static ".static" -->
-  <p>{{ static_url_for('.static', filename='app.css') }}</p>
-
-  <!-- specific static "page_2.static" -->
-  <p>{{ static_url_for('page_2.static', filename='app.css') }}</p>
-
-  <!-- specific static "page_1.static" -->
-  <p>{{ static_url_for('page_1.static', filename='app.css') }}</p>
+  <p>{{ static_url_for(".static", filename="app.css") }}</p>
+  <p>{{ static_url_for("page_2.static", filename="app.css") }}</p>
+  <p>{{ static_url_for("page_1.static", filename="app.css") }}</p>
 
   <link type="text/css" rel="stylesheet"
         href="{{ static_url_for('.static', filename='app.css') }}">

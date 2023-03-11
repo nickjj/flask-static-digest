@@ -41,9 +41,9 @@ class FlaskStaticDigest(object):
                 manifest = self._load_manifest(scaffold, manifest_path)
                 self.manifests[endpoint] = manifest
 
-        ingestScaffold('static', app)
+        ingestScaffold("static", app)
         for endpoint, scaffold in app.blueprints.items():
-            ingestScaffold(endpoint + '.static', scaffold)
+            ingestScaffold(endpoint + ".static", scaffold)
 
         app.add_template_global(self.static_url_for)
 
