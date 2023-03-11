@@ -43,7 +43,7 @@ class FlaskStaticDigest(object):
 
         ingestScaffold("static", app)
         for endpoint, scaffold in app.blueprints.items():
-            ingestScaffold(endpoint + ".static", scaffold)
+            ingestScaffold(f"{endpoint}.static", scaffold)
 
         app.add_template_global(self.static_url_for)
 
