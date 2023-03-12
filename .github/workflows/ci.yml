@@ -100,7 +100,7 @@ jobs:
           || (echo 'Stylesheet is md5 tagged test (index): fail' && exit 1)
 
           curl http://localhost:5000/about/ \
-          | grep -q 'https://cdn.example.com/about/static/app-297c671953f6c24f1354214b3f706e0b.css.css' \
+          | grep -q 'https://cdn.example.com/about/static/app-297c671953f6c24f1354214b3f706e0b.css' \
           && (echo 'Stylesheet is md5 tagged test (about): pass' && exit 0) \
           || (echo 'Stylesheet is md5 tagged test (about): fail' && exit 1)
 
