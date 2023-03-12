@@ -10,9 +10,9 @@
 
 <body>
   <h1>This is an example application</h1>
-  <a href="/">index</a>
-  <a href="/about">About</a>
-  <a href="/contact">Contact</a>
+  <a href="{{ url_for('index') }}">Index</a>
+  <a href="{{ url_for('about.about') }}">About</a>
+  <a href="{{ url_for('contact.contact') }}">Contact</a>
   {% block body %}{% endblock %}
 </body>
 </html>

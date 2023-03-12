@@ -1,10 +1,8 @@
 {% extends "layout.html" %}
 
 {% block body %}
-  <br/>
-  <br/>
-  <a href="/about/our-story">Our Story</a>
-  <a href="/about/our-team">Our Team</a>
+  <a href="{{ url_for('about.story.story') }}">Our Story</a>
+  <a href="{{ url_for('about.team.team') }}">Our Team</a>
 
   <h2>About Us</h2>
   <p>This is an example application</p>
