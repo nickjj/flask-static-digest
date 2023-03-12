@@ -14,5 +14,5 @@ bp_about.register_blueprint(bp_team)
 
 
 @bp_about.route("/")
-def about():
-    return render_template("about.html")
+def index():
+    return render_template("index.html")

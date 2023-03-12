@@ -7,5 +7,5 @@ bp_team = Blueprint("team", __name__,
 
 
 @bp_team.route("/team")
-def team():
-    return render_template("team.html")
+def index():
+    return render_template("index.html")

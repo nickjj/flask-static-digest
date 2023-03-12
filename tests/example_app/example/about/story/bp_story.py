@@ -6,5 +6,5 @@ bp_story = Blueprint("story", __name__,
 
 
 @bp_story.route("/story")
-def story():
-    return render_template("story.html")
+def index():
+    return render_template("index.html")

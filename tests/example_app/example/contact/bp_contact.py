@@ -8,5 +8,5 @@ bp_contact = Blueprint("contact",
 
 
 @bp_contact.route("/contact")
-def contact():
-    return render_template("contact.html")
+def index():
+    return render_template("index.html")
