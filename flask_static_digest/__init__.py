@@ -49,7 +49,7 @@ class FlaskStaticDigest(object):
             logging.warning(f"Couldn't decode file: {manifest_path}")
         except PermissionError:
             logging.warning(f"Couldn't access file: {manifest_path}")
-        except (FileNotFoundError, Exception) as e:
+        except (FileNotFoundError, Exception):
             pass
 
     def static_url_for(self, endpoint, **values):
