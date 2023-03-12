@@ -1,4 +1,4 @@
-name: "CI"
+ourname: "CI"
 
 on:
   pull_request:
@@ -50,7 +50,7 @@ jobs:
           && (echo "File count before compiling test (contact): pass" && exit 0) \
           || (echo "File count before compiling test (contact): fail" && exit 1)
 
-          ls -laR example/about/our_team/static/ | wc -l \
+          ls -laR example/about/team/static/ | wc -l \
           | grep -q "5" \
           && (echo "File count before compiling test (team): pass" && exit 0) \
           || (echo "File count before compiling test (team): fail" && exit 1)
@@ -72,7 +72,7 @@ jobs:
           && (echo "File count after compiling test (contact): pass" && exit 0) \
           || (echo "File count after compiling test (contact): fail" && exit 1)
 
-          ls -laR example/about/our_team/static/ | wc -l \
+          ls -laR example/about/team/static/ | wc -l \
           | grep -q "9" \
           && (echo "File count after compiling test (team): pass" && exit 0) \
           || (echo "File count after compiling test (team): fail" && exit 1)
@@ -100,17 +100,17 @@ jobs:
           || (echo 'Stylesheet is md5 tagged test (index): fail' && exit 1)
 
           curl http://localhost:5000/about/ \
-          | grep -q 'https://cdn.example.com/about/static/app-26e1223874615486e78e1612ed432e14.css' \
+          | grep -q 'https://cdn.example.com/about/static/app-297c671953f6c24f1354214b3f706e0b.css.css' \
           && (echo 'Stylesheet is md5 tagged test (about): pass' && exit 0) \
           || (echo 'Stylesheet is md5 tagged test (about): fail' && exit 1)
 
           curl http://localhost:5000/contact \
-          | grep -q 'https://cdn.example.com/contact/static/app-b84e7798a410485d12d404fae97bd763.css' \
+          | grep -q 'https://cdn.example.com/contact/static/app-b71c3f4f5d026dd5198163b655228776.css' \
           && (echo 'Stylesheet is md5 tagged test (contact): pass' && exit 0) \
           || (echo 'Stylesheet is md5 tagged test (contact): fail' && exit 1)
 
-          curl http://localhost:5000/about/our-team \
-          | grep -q 'https://cdn.example.com/about/static/team/app-56af948255826f1052ba1dc074a31fd5.css' \
+          curl http://localhost:5000/about/team \
+          | grep -q 'https://cdn.example.com/about/static/team/app-023f768653c556fc2fcaf338b408c464.css' \
           && (echo 'Stylesheet is md5 tagged test (team): pass' && exit 0) \
           || (echo 'Stylesheet is md5 tagged test (team): fail' && exit 1)
 
@@ -131,7 +131,7 @@ jobs:
           && (echo "File count after cleaning test (contact): pass" && exit 0) \
           || (echo "File count after cleaning test (contact): fail" && exit 1)
 
-          ls -laR example/about/our_team/static/ | wc -l \
+          ls -laR example/about/team/static/ | wc -l \
           | grep -q "5" \
           && (echo "File count after cleaning test (team): pass" && exit 0) \
           || (echo "File count after cleaning test (team): fail" && exit 1)

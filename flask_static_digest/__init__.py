@@ -36,14 +36,14 @@ class FlaskStaticDigest(object):
 
         app.add_template_global(self.static_url_for)
 
-    def _load_manifest(self, endpoint, blueprint):
-        if not blueprint.has_static_folder:
+    def _load_manifest(self, endpoint, scaffold):
+        if not scaffold.has_static_folder:
             return
 
-        manifest_path = os.path.join(blueprint._static_folder,
+        manifest_path = os.path.join(scaffold._static_folder,
                                      "cache_manifest.json")
         try:
-            with blueprint.open_resource(manifest_path, "r") as f:
+            with scaffold.open_resource(manifest_path, "r") as f:
                 self.manifests[endpoint] = json.load(f)
         except json.JSONDecodeError:
             logging.warning(f"Couldn't decode file: {manifest_path}")
