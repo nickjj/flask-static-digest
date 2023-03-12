@@ -65,21 +65,16 @@ class FlaskStaticDigest(object):
         :return: Static file path.
         """
 
-        # Note: This is taken from Flask's url_for
-        # ( resolves relative endpoints )
         if request is not None:
             blueprint_name = request.blueprint
-
-            # If the endpoint starts with "." and the request matches a
-            # blueprint, the endpoint is relative to the blueprint.
             if endpoint[:1] == ".":
                 if blueprint_name is not None:
                     endpoint = f"{blueprint_name}{endpoint}"
                 else:
                     endpoint = endpoint[1:]
-        # endNote
 
         manifest = self.manifests.get(endpoint, {})
         filename = values.get("filename", None)
         values['filename'] = manifest.get(filename, filename)
+
         return urljoin(self.host_url, flask_url_for(endpoint, **values))
