@@ -17,12 +17,12 @@ def digest():
 @with_appcontext
 def compile():
     """Generate optimized static files and a cache manifest."""
-    for scaffold in [current_app, *current_app.blueprints.values()]:
-        if not scaffold.static_folder:
+    for blueprint in [current_app, *current_app.blueprints.values()]:
+        if not blueprint.static_folder:
             continue
 
-        _compile(scaffold.static_folder,
-                 scaffold.static_folder,
+        _compile(blueprint.static_folder,
+                 blueprint.static_folder,
                  current_app.config.get(
                      "FLASK_STATIC_DIGEST_BLACKLIST_FILTER"),
                  current_app.config.get("FLASK_STATIC_DIGEST_GZIP_FILES"))
@@ -32,10 +32,10 @@ def compile():
 @with_appcontext
 def clean():
     """Remove generated static files and cache manifest."""
-    for scaffold in [current_app, *current_app.blueprints.values()]:
-        if not scaffold.static_folder:
+    for blueprint in [current_app, *current_app.blueprints.values()]:
+        if not blueprint.static_folder:
             continue
 
-        _clean(scaffold.static_folder,
+        _clean(blueprint.static_folder,
                current_app.config.get("FLASK_STATIC_DIGEST_BLACKLIST_FILTER"),
                current_app.config.get("FLASK_STATIC_DIGEST_GZIP_FILES"))

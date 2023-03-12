@@ -1,3 +1,4 @@
+import logging
 import json
 import os
 
@@ -29,23 +30,27 @@ class FlaskStaticDigest(object):
 
         self.manifests = {}
 
-        def ingestScaffold(endpoint, scaffold):
-            if not scaffold.has_static_folder:
-                return
-
-            manifest_path = os.path.join(scaffold.static_folder,
-                                         "cache_manifest.json")
-            has_manifest = os.path.exists(manifest_path)
-
-            if has_manifest:
-                manifest = self._load_manifest(scaffold, manifest_path)
-                self.manifests[endpoint] = manifest
-
-        ingestScaffold("static", app)
-        for endpoint, scaffold in app.blueprints.items():
-            ingestScaffold(f"{endpoint}.static", scaffold)
+        self._load_manifest("static", app)
+        for endpoint, blueprint in app.blueprints.items():
+            self._load_manifest(f"{endpoint}.static", blueprint)
 
         app.add_template_global(self.static_url_for)
+
+    def _load_manifest(self, endpoint, blueprint):
+        if not blueprint.has_static_folder:
+            return
+
+        manifest_path = os.path.join(blueprint._static_folder,
+                                     "cache_manifest.json")
+        try:
+            with blueprint.open_resource(manifest_path, "r") as f:
+                self.manifests[endpoint] = json.load(f)
+        except json.JSONDecodeError:
+            logging.warning(f"Couldn't decode file: {manifest_path}")
+        except PermissionError:
+            logging.warning(f"Couldn't access file: {manifest_path}")
+        except (FileNotFoundError, Exception) as e:
+            pass
 
     def static_url_for(self, endpoint, **values):
         """
@@ -59,10 +64,8 @@ class FlaskStaticDigest(object):
         :param values: Arguments of the URL rule
         :return: Static file path.
         """
-        new_filename = {}
-        filename = values.get("filename")
 
-        # note: this is taken from flask's url_for
+        # Note: This is taken from Flask's url_for
         # ( resolves relative endpoints )
         if request is not None:
             blueprint_name = request.blueprint
@@ -74,23 +77,9 @@ class FlaskStaticDigest(object):
                     endpoint = f"{blueprint_name}{endpoint}"
                 else:
                     endpoint = endpoint[1:]
-        # endnote
+        # endNote
 
-        if filename:
-            # If the manifest lookup fails then use the original filename
-            # so that Flask doesn't throw a 500, but instead a proper 404.
-            # The above only happens if your template has an invalid filename.
-            manifest = self.manifests.get(endpoint)
-            if manifest:
-                new_filename["filename"] = manifest.get(filename, filename)
-
-        merged_values = {**values, **new_filename}
-
-        flask_url = flask_url_for(endpoint, **merged_values)
-        return urljoin(self.host_url, flask_url)
-
-    def _load_manifest(self, scaffold, manifest_path):
-        with scaffold.open_resource(manifest_path, "r") as f:
-            manifest_dict = json.load(f)
-
-        return manifest_dict
+        manifest = self.manifests.get(endpoint, {})
+        filename = values.get("filename", None)
+        values['filename'] = manifest.get(filename, filename)
+        return urljoin(self.host_url, flask_url_for(endpoint, **values))
