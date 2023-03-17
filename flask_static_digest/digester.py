@@ -58,8 +58,10 @@ def clean(output_path, digest_blacklist_filter, gzip_files):
             file_name, file_extension = os.path.splitext(item)
             basename = os.path.basename(item)
 
-            if (re.search(DIGESTED_FILE_REGEX, basename)
-                    and file_extension not in digest_blacklist_filter):
+            if (
+                re.search(DIGESTED_FILE_REGEX, basename)
+                and file_extension not in digest_blacklist_filter
+            ):
                 if os.path.exists(item):
                     os.remove(item)
 
@@ -91,10 +93,12 @@ def _is_compiled_file(file_path, digest_blacklist_filter):
     file_name, file_extension = os.path.splitext(file_path)
     basename = os.path.basename(file_path)
 
-    return (re.search(DIGESTED_FILE_REGEX, basename)
-            or file_extension in digest_blacklist_filter
-            or file_extension == ".gz"
-            or basename == "cache_manifest.json")
+    return (
+        re.search(DIGESTED_FILE_REGEX, basename)
+        or file_extension in digest_blacklist_filter
+        or file_extension == ".gz"
+        or basename == "cache_manifest.json"
+    )
 
 
 def _generate_manifest(files, gzip_files, output_path):

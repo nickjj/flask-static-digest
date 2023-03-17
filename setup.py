@@ -14,13 +14,9 @@ setup(
     platforms="any",
     python_requires=">=3.6",
     zip_safe=False,
-    install_requires=[
-        "Flask>=1.0"
-    ],
+    install_requires=["Flask>=1.0"],
     entry_points={
-        "flask.commands": [
-            "digest=flask_static_digest.cli:digest"
-        ],
+        "flask.commands": ["digest=flask_static_digest.cli:digest"],
     },
     classifiers=[
         "Environment :: Web Environment",
@@ -32,6 +28,6 @@ setup(
         "Programming Language :: Python :: 3",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Topic :: Software Development :: Libraries :: Python Modules",
-        "Topic :: System :: Archiving :: Compression"
-    ]
+        "Topic :: System :: Archiving :: Compression",
+    ],
 )

@@ -23,11 +23,12 @@ jobs:
 
       - name: "Install dependencies"
         run: |
-          pip3 install flake8 Flask==2.2.3
+          pip3 install flake8 black Flask==2.2.3
           pip3 install -e .
       - name: "Lint code base"
         run: |
           flake8 .
+          black --check .
       - name: "Run test suite"
         run: |
           cd tests/example_app

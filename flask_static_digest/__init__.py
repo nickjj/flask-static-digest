@@ -39,8 +39,9 @@ class FlaskStaticDigest(object):
         if not scaffold.has_static_folder:
             return
 
-        manifest_path = os.path.join(scaffold._static_folder,
-                                     "cache_manifest.json")
+        manifest_path = os.path.join(
+            scaffold._static_folder, "cache_manifest.json"
+        )
         try:
             with scaffold.open_resource(manifest_path, "r") as f:
                 self.manifests[endpoint] = json.load(f)
@@ -52,8 +53,9 @@ class FlaskStaticDigest(object):
             pass
 
     def _prepend_host_url(self, host, filename):
-        return urljoin(self.host_url,
-                       "/".join([self.static_url_path, filename]))
+        return urljoin(
+            self.host_url, "/".join([self.static_url_path, filename])
+        )
 
     def static_url_for(self, endpoint, **values):
         """
@@ -76,6 +78,6 @@ class FlaskStaticDigest(object):
 
         manifest = self.manifests.get(endpoint, {})
         filename = values.get("filename", None)
-        values['filename'] = manifest.get(filename, filename)
+        values["filename"] = manifest.get(filename, filename)
 
         return urljoin(self.host_url, flask_url_for(endpoint, **values))

@@ -21,11 +21,12 @@ def compile():
         if not blueprint.static_folder:
             continue
 
-        _compile(blueprint.static_folder,
-                 blueprint.static_folder,
-                 current_app.config.get(
-                     "FLASK_STATIC_DIGEST_BLACKLIST_FILTER"),
-                 current_app.config.get("FLASK_STATIC_DIGEST_GZIP_FILES"))
+        _compile(
+            blueprint.static_folder,
+            blueprint.static_folder,
+            current_app.config.get("FLASK_STATIC_DIGEST_BLACKLIST_FILTER"),
+            current_app.config.get("FLASK_STATIC_DIGEST_GZIP_FILES"),
+        )
 
 
 @digest.command()
@@ -36,6 +37,8 @@ def clean():
         if not blueprint.static_folder:
             continue
 
-        _clean(blueprint.static_folder,
-               current_app.config.get("FLASK_STATIC_DIGEST_BLACKLIST_FILTER"),
-               current_app.config.get("FLASK_STATIC_DIGEST_GZIP_FILES"))
+        _clean(
+            blueprint.static_folder,
+            current_app.config.get("FLASK_STATIC_DIGEST_BLACKLIST_FILTER"),
+            current_app.config.get("FLASK_STATIC_DIGEST_GZIP_FILES"),
+        )
