@@ -61,6 +61,7 @@ Video](https://img.youtube.com/vi/-Xd84hlIjkI/0.jpg)](https://www.youtube.com/wa
 #### Changes since this video
 
 - `FLASK_STATIC_DIGEST_HOST_URL` has been added to configure an optional external host, aka. CDN ([explained here](#configuring-this-extension))
+- If your blueprints have static files they will get digested now too (including nested blueprints!)
 
 ## Table of Contents
 
@@ -173,9 +174,9 @@ Each command is labeled, but here's a bit more information on what they do.
 
 ### compile
 
-Inspects your Flask app's `static_folder` and uses that as both the input and
-output path of where to look for and create the newly digested and compressed
-files.
+Inspects your Flask app's and blueprint's `static_folder` and uses that as both
+the input and output path of where to look for and create the newly digested
+and compressed files.
 
 At a high level it recursively loops over all of the files it finds in that
 directory and then generates the md5 tagged and gzipped versions of each file.

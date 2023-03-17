@@ -9,6 +9,14 @@
 </head>
 
 <body>
-  <h1>{% block body %}{% endblock %}</h1>
+  <h1>This is an example application</h1>
+
+  <a href="{{ url_for('index') }}">Index</a>
+  <a href="{{ url_for('about.index') }}">About</a>
+  <a href="{{ url_for('about.story.index') }}">About: Story</a>
+  <a href="{{ url_for('about.team.index') }}">About: Team</a>
+  <a href="{{ url_for('contact.index') }}">Contact</a>
+
+  {% block body %}{% endblock %}
 </body>
 </html>

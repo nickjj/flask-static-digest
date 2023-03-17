@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block body %}
+  <h2>Story</h2>
+
+  <p>This is an example story page.</p>
+
+  <link type="text/css" rel="stylesheet"
+        href="{{ static_url_for('about.story.static', filename='app.css') }}">
+{% endblock %}
