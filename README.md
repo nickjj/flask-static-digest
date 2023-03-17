@@ -217,8 +217,8 @@ the file are.*
 
 ### clean
 
-Inspects your Flask app's `static_folder` and uses that as the input path of
-where to look for digested and compressed files.
+Inspects your Flask app's and blueprint's `static_folder` and uses that as the
+input path of where to look for digested and compressed files.
 
 It will recursively delete files that have a file extension of `.gz` and also
 deletes files that have been digested. It determines if a file has been
