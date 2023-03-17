@@ -15,9 +15,9 @@ Other web frameworks like Django, Ruby on Rails and Phoenix all have this
 feature built into their framework, and now with this extension Flask does too.
 
 **This extension will work if you're not using any asset build tools but at the
-same time it also works with Webpack, Grunt, Gulp or any other build tool you
-can think of. This tool does not depend on or compete with existing asset build
-tools.**
+same time it also works with esbuild, Webpack, Grunt, Gulp or any other build
+tool you can think of. This tool does not depend on or compete with existing
+asset build tools.**
 
 If you're already using Webpack or a similar tool, that's great. Webpack takes
 care of bundling your assets and helps convert things like SASS to CSS and ES6+
