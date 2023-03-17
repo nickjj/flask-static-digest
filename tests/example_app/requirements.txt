@@ -1,2 +1,2 @@
 Flask==2.2.3
-Flask-Static-Digest==0.2.1
+Flask-Static-Digest==0.3.0
