@@ -1,10 +1,10 @@
-import logging
 import json
+import logging
 import os
-
 from urllib.parse import urljoin
 
-from flask import request, url_for as flask_url_for
+from flask import request
+from flask import url_for as flask_url_for
 
 
 class FlaskStaticDigest(object):
@@ -22,8 +22,11 @@ class FlaskStaticDigest(object):
         :return: None
         """
         app.config.setdefault("FLASK_STATIC_DIGEST_BLACKLIST_FILTER", [])
-        app.config.setdefault("FLASK_STATIC_DIGEST_GZIP_FILES", True)
         app.config.setdefault("FLASK_STATIC_DIGEST_HOST_URL", None)
+        app.config.setdefault("FLASK_STATIC_DIGEST_COMPRESSION", ["gzip"])
+
+        compression = set(app.config["FLASK_STATIC_DIGEST_COMPRESSION"])
+        app.config["FLASK_STATIC_DIGEST_COMPRESSION"] = list(compression)
 
         self.host_url = app.config.get("FLASK_STATIC_DIGEST_HOST_URL")
 
