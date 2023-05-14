@@ -7,7 +7,7 @@ setup(
     author="Nick Janetakis",
     author_email="nick.janetakis@gmail.com",
     url="https://github.com/nickjj/flask-static-digest",
-    description="Flask extension for md5 tagging and gzipping static files.",
+    description="Flask extension for md5 tagging and compressing (gzip / brotli) static files.",
     license="MIT",
     package_data={"Flask-Static-Digest": ["VERSION"]},
     packages=["flask_static_digest"],

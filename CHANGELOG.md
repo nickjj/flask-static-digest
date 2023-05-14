@@ -7,9 +7,13 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+- Nothing yet!
+
+## [0.4.0] - 2023-05-14
+
 - Brotli support added by [Dr. Matthew Swabey](https://github.com/mattaw)
 - Remove `FLASK_STATIC_DIGEST_GZIP_FILES` gzip config option
-- Add `FLASK_STATIC_DIGEST_COMPRESSION` (defaults to ["gzip"] and replaces the old gzip config option)
+- Add `FLASK_STATIC_DIGEST_COMPRESSION` (defaults to `["gzip"]` and replaces the old gzip config option)
 
 ## [0.3.0] - 2022-03-16
 
@@ -58,7 +62,8 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Everything!
 
-[Unreleased]: https://github.com/nickjj/flask-static-digest/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/nickjj/flask-static-digest/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/nickjj/flask-static-digest/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/nickjj/flask-static-digest/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/nickjj/flask-static-digest/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/nickjj/flask-static-digest/compare/v0.1.4...v0.2.0
