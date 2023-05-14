@@ -1,3 +1,4 @@
+import functools
 import glob
 import gzip
 import hashlib
@@ -7,11 +8,14 @@ import re
 import shutil
 
 DIGESTED_FILE_REGEX = r"-[a-f\d]{32}"
+CHUNK_SIZE = 1024 * 1024
 
 
-def compile(input_path, output_path, digest_blacklist_filter, gzip_files):
+def compile(
+    input_path, output_path, digest_blacklist_filter, gzip_files, brotli_files
+):
     """
-    Generate md5 tagged static files that are also compressed with gzip.
+    Generate md5 tagged static files compressed with gzip and brotli.
 
     :param input_path: The source path of your static files
     :type input_path: str
@@ -21,6 +25,8 @@ def compile(input_path, output_path, digest_blacklist_filter, gzip_files):
     :type digest_blacklist_filter: list
     :param gzip_files: Whether or not gzipped files will be generated
     :type gzip_files: bool
+    :param brotli_files: Whether or not brotli files will be generated
+    :type brotli_files: bool
     :return: None
     """
     if not os.path.exists(input_path):
@@ -32,14 +38,14 @@ def compile(input_path, output_path, digest_blacklist_filter, gzip_files):
         return None
 
     files = _filter_files(input_path, digest_blacklist_filter)
-    manifest = _generate_manifest(files, gzip_files, output_path)
+    manifest = _generate_manifest(files, gzip_files, brotli_files, output_path)
     _save_manifest(manifest, output_path)
 
     print(f"Check your digested files at '{output_path}'")
     return None
 
 
-def clean(output_path, digest_blacklist_filter, gzip_files):
+def clean(output_path, digest_blacklist_filter, gzip_files, brotli_files):
     """
     Delete the generated md5 tagged and gzipped static files.
 
@@ -47,15 +53,17 @@ def clean(output_path, digest_blacklist_filter, gzip_files):
     :type input_path: str
     :param output_path: The destination path of your static files
     :type output_path: str
-    :param digest_blacklist_filter: Ignore compiling these file types
+    :param digest_blacklist_filter: Ignore cleaning these file types
     :type digest_blacklist_filter: list
-    :param gzip_files: Whether or not gzipped files will be generated
+    :param gzip_files: Whether or not gzipped files will be cleaned
     :type gzip_files: bool
+    :param brotli_files: Whether or not brotli files will be cleaned
+    :type brotli_files: bool
     :return: None
     """
     for item in glob.iglob(output_path + "**/**", recursive=True):
         if os.path.isfile(item):
-            file_name, file_extension = os.path.splitext(item)
+            _, file_extension = os.path.splitext(item)
             basename = os.path.basename(item)
 
             if (
@@ -66,6 +74,10 @@ def clean(output_path, digest_blacklist_filter, gzip_files):
                     os.remove(item)
 
             if gzip_files and file_extension == ".gz":
+                if os.path.exists(item):
+                    os.remove(item)
+
+            if brotli_files and file_extension == ".br":
                 if os.path.exists(item):
                     os.remove(item)
 
@@ -97,11 +109,12 @@ def _is_compiled_file(file_path, digest_blacklist_filter):
         re.search(DIGESTED_FILE_REGEX, basename)
         or file_extension in digest_blacklist_filter
         or file_extension == ".gz"
+        or file_extension == ".br"
         or basename == "cache_manifest.json"
     )
 
 
-def _generate_manifest(files, gzip_files, output_path):
+def _generate_manifest(files, gzip_files, brotli_files, output_path):
     manifest = {}
 
     for file in files:
@@ -114,7 +127,9 @@ def _generate_manifest(files, gzip_files, output_path):
 
         manifest[rel_file_path] = digested_file_path
 
-        _write_to_disk(file, digested_file_path, gzip_files, output_path)
+        _write_to_disk(
+            file, digested_file_path, gzip_files, brotli_files, output_path
+        )
 
     return manifest
 
@@ -138,7 +153,9 @@ def _save_manifest(manifest, output_path):
     return None
 
 
-def _write_to_disk(file, digested_file_path, gzip_files, input_path):
+def _write_to_disk(
+    file, digested_file_path, gzip_files, brotli_files, input_path
+):
     full_digested_file_path = os.path.join(input_path, digested_file_path)
 
     # Copy file while preserving permissions and meta data if supported.
@@ -149,8 +166,22 @@ def _write_to_disk(file, digested_file_path, gzip_files, input_path):
             with gzip.open(f"{file}.gz", "wb") as f_out:
                 shutil.copyfileobj(f_in, f_out)
 
-        with open(full_digested_file_path, "rb") as f_in:
-            with gzip.open(f"{full_digested_file_path}.gz", "wb") as f_out:
-                shutil.copyfileobj(f_in, f_out)
+        shutil.copy2(f"{file}.gz", f"{full_digested_file_path}.gz")
+
+    if brotli_files:
+        import brotli
+
+        compressor = brotli.Compressor(quality=11)
+
+        with open(file, "rb") as f_in:
+            with open(f"{file}.br", "wb") as f_out:
+                read_chunk = functools.partial(f_in.read, CHUNK_SIZE)
+
+                for data in iter(read_chunk, b""):
+                    f_out.write(compressor.process(data))
+
+                f_out.write(compressor.finish())
+
+        shutil.copy2(f"{file}.br", f"{full_digested_file_path}.br")
 
     return None

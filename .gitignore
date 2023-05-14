@@ -81,3 +81,6 @@ coverage.xml
 *.pot
 
 # End of https://www.gitignore.io/api/python,osx
+
+# Exclude local .venv
+.venv/

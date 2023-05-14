@@ -24,12 +24,12 @@ jobs:
       - name: "Install dependencies"
         run: |
           pip3 install flake8 black Flask==2.2.3
-          pip3 install -e .
+          pip3 install -e .[brotli]
       - name: "Lint code base"
         run: |
           flake8 .
           black --check .
-      - name: "Run test suite"
+      - name: "Run test suite for gzip and brotli"
         run: |
           cd tests/example_app
           export FLASK_APP=example.app
@@ -51,21 +51,29 @@ jobs:
           || (echo "File count before compiling test (team): fail" && exit 1)
           flask digest compile \
           && ls -laR example/static/ | wc -l \
-          | grep -q "36" \
+          | grep -q "42" \
           && (echo "File count after compiling test (index): pass" && exit 0) \
           || (echo "File count after compiling test (index): fail" && exit 1)
           ls -laR example/about/static/ | wc -l \
-          | grep -q "9" \
+          | grep -q "11" \
           && (echo "File count after compiling test (about): pass" && exit 0) \
           || (echo "File count after compiling test (about): fail" && exit 1)
           ls -laR example/contact/static/ | wc -l \
-          | grep -q "9" \
+          | grep -q "11" \
           && (echo "File count after compiling test (contact): pass" && exit 0) \
           || (echo "File count after compiling test (contact): fail" && exit 1)
           ls -laR example/about/team/static/ | wc -l \
-          | grep -q "9" \
+          | grep -q "11" \
           && (echo "File count after compiling test (team): pass" && exit 0) \
           || (echo "File count after compiling test (team): fail" && exit 1)
+          find . -type f | grep ".gz$" | wc -l \
+          | grep -q "14" \
+          && (echo "Check for gzip asset creation: pass" && exit 0) \
+          || (echo "Check for gzip asset creation: pass: fail" && exit 1)
+          find . -type f | grep ".br$" | wc -l \
+          | grep -q "14" \
+          && (echo "Check for brotli asset creation: pass" && exit 0) \
+          || (echo "Check for brotli asset creation: pass: fail" && exit 1)
           grep -q "js/modules/hello.js" example/static/cache_manifest.json \
           && (echo "Cache manifest has nested file test: pass" && exit 0) \
           || (echo "Cache manifest has nested file test: fail" && exit 1)
@@ -93,6 +101,7 @@ jobs:
           | grep -q 'https://cdn.example.com/about/static/team/app-023f768653c556fc2fcaf338b408c464.css' \
           && (echo 'Stylesheet is md5 tagged test (team): pass' && exit 0) \
           || (echo 'Stylesheet is md5 tagged test (team): fail' && exit 1)
+          kill $!
           flask digest clean \
           && ls -laR example/static/ | wc -l \
           | grep -q "26" \
@@ -110,9 +119,11 @@ jobs:
           | grep -q "5" \
           && (echo "File count after cleaning test (team): pass" && exit 0) \
           || (echo "File count after cleaning test (team): fail" && exit 1)
-          flask run -p 5001 &
+          flask run &
           sleep 5 \
-          && curl http://localhost:5001 \
+          && curl http://localhost:5000 \
           | grep -q 'https://cdn.example.com/static/js/app.js' \
           && (echo 'Javascript is not md5 tagged test: pass' && exit 0) \
           || (echo 'Javascript is not md5 tagged test: fail' && exit 1)
+          flask digest clean
+          kill $!

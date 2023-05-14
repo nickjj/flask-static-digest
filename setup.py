@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="Flask-Static-Digest",
-    version="0.3.0",
+    version="0.4.0",
     author="Nick Janetakis",
     author_email="nick.janetakis@gmail.com",
     url="https://github.com/nickjj/flask-static-digest",
@@ -15,6 +15,7 @@ setup(
     python_requires=">=3.6",
     zip_safe=False,
     install_requires=["Flask>=1.0"],
+    extras_require={"brotli": ["Brotli>=1.0.9"]},
     entry_points={
         "flask.commands": ["digest=flask_static_digest.cli:digest"],
     },
