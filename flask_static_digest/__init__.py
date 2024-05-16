@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-from urllib.parse import urljoin
 
 from flask import request
 from flask import url_for as flask_url_for
@@ -55,10 +54,17 @@ class FlaskStaticDigest(object):
         except (FileNotFoundError, Exception):
             pass
 
-    def _prepend_host_url(self, host, filename):
-        return urljoin(
-            self.host_url, "/".join([self.static_url_path, filename])
-        )
+    def _custom_url_join(self, url_path):
+        """
+        Join the host URL with another URL path.
+        :param url_path: The URL returned by url_for
+        :type url_path: str
+        :return: Joined URL
+        """
+        if self.host_url is None:
+            return url_path
+
+        return "/".join([self.host_url.rstrip("/"), url_path.lstrip("/")])
 
     def static_url_for(self, endpoint, **values):
         """
@@ -83,4 +89,4 @@ class FlaskStaticDigest(object):
         filename = values.get("filename", None)
         values["filename"] = manifest.get(filename, filename)
 
-        return urljoin(self.host_url, flask_url_for(endpoint, **values))
+        return self._custom_url_join(flask_url_for(endpoint, **values))
