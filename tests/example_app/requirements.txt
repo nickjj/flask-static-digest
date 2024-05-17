@@ -1,3 +1,3 @@
-Flask==2.2.3
+Flask==2.2.5
 Flask-Static-Digest==0.4.0
 Brotli==1.0.9
