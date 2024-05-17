@@ -9,6 +9,10 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Nothing yet!
 
+## [0.4.1] - 2024-05-17
+
+- Fix `FLASK_STATIC_DIGEST_HOST_URL` to support URL paths that have multiple `/` segments
+
 ## [0.4.0] - 2023-05-14
 
 - Brotli support added by [Dr. Matthew Swabey](https://github.com/mattaw)
@@ -62,7 +66,8 @@ Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Everything!
 
-[Unreleased]: https://github.com/nickjj/flask-static-digest/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/nickjj/flask-static-digest/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/nickjj/flask-static-digest/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/nickjj/flask-static-digest/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/nickjj/flask-static-digest/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/nickjj/flask-static-digest/compare/v0.2.0...v0.2.1
